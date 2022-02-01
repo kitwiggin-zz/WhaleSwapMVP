@@ -7,10 +7,12 @@ import App from "./App";
 import { Drizzle, generateStore } from "@drizzle/store";
 import MyStringStore from "./contracts/MyStringStore.json";
 import Factory from "./contracts/Factory.json";
+import Token1 from "./contracts/TestToken1.json";
+import Token2 from "./contracts/TestToken2.json";
 
 // let drizzle know what contracts we want and how to access our test blockchain
 const options = {
-  contracts: [MyStringStore, Factory],
+  contracts: [MyStringStore, Factory, Token1, Token2],
   web3: {
     fallback: {
       type: "ws",

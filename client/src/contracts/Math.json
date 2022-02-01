@@ -10,7 +10,7 @@
   "sourceMap": "80:522:5:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "80:522:5:-:0;;;;;;;;",
   "source": "pragma solidity >=0.5.16;\n\n// a library for performing various math operations\n\nlibrary Math {\n    function min(uint x, uint y) internal pure returns (uint z) {\n        z = x < y ? x : y;\n    }\n\n    // babylonian method (https://en.wikipedia.org/wiki/Methods_of_computing_square_roots#Babylonian_method)\n    function sqrt(uint y) internal pure returns (uint z) {\n        if (y > 3) {\n            z = y;\n            uint x = y / 2 + 1;\n            while (x < z) {\n                z = x;\n                x = (y / x + x) / 2;\n            }\n        } else if (y != 0) {\n            z = 1;\n        }\n    }\n}",
-  "sourcePath": "/Users/kitwiggin/senior_design/mvp_fe/contracts/libraries/Math.sol",
+  "sourcePath": "/Users/kitwiggin/senior_design/WhaleSwapMVP/contracts/libraries/Math.sol",
   "ast": {
     "absolutePath": "project:/contracts/libraries/Math.sol",
     "exportedSymbols": {
@@ -1881,7 +1881,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-01-26T00:01:16.202Z",
+  "updatedAt": "2022-02-01T01:45:49.327Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

@@ -10,7 +10,7 @@
   "sourceMap": "133:430:6:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "133:430:6:-:0;;;;;;;;",
   "source": "pragma solidity >=0.5.16;\n\n// a library for performing overflow-safe math, courtesy of DappHub (https://github.com/dapphub/ds-math)\n\nlibrary SafeMath {\n    function add(uint x, uint y) internal pure returns (uint z) {\n        require((z = x + y) >= x, 'ds-math-add-overflow');\n    }\n\n    function sub(uint x, uint y) internal pure returns (uint z) {\n        require((z = x - y) <= x, 'ds-math-sub-underflow');\n    }\n\n    function mul(uint x, uint y) internal pure returns (uint z) {\n        require(y == 0 || (z = x * y) / y == x, 'ds-math-mul-overflow');\n    }\n}",
-  "sourcePath": "/Users/kitwiggin/senior_design/mvp_fe/contracts/libraries/SafeMath.sol",
+  "sourcePath": "/Users/kitwiggin/senior_design/WhaleSwapMVP/contracts/libraries/SafeMath.sol",
   "ast": {
     "absolutePath": "project:/contracts/libraries/SafeMath.sol",
     "exportedSymbols": {
@@ -2057,7 +2057,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-01-26T00:01:16.212Z",
+  "updatedAt": "2022-02-01T01:45:49.330Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

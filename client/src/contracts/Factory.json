@@ -1100,7 +1100,7 @@
   "sourceMap": "49:633:1:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "49:633:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;228:452;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;72:62;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;228:452;298:12;483:6;491;474:24;;;;;:::i;:::-;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;459:40;;579:4;553:7;:15;561:6;553:15;;;;;;;;;;;;;;;:23;569:6;553:23;;;;;;;;;;;;;;;;:30;;;;;;;;;;;;;;;;;;619:4;593:7;:15;601:6;593:15;;;;;;;;;;;;;;;:23;609:6;593:23;;;;;;;;;;;;;;;;:30;;;;;;;;;;;;;;;;;;660:6;639:34;;652:6;639:34;;;668:4;639:34;;;;;;:::i;:::-;;;;;;;;228:452;;;;:::o;72:62::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;-1:-1:-1:-;;;;;;;;:::o;88:117:10:-;197:1;194;187:12;334:126;371:7;411:42;404:5;400:54;389:65;;334:126;;;:::o;466:96::-;503:7;532:24;550:5;532:24;:::i;:::-;521:35;;466:96;;;:::o;568:122::-;641:24;659:5;641:24;:::i;:::-;634:5;631:35;621:63;;680:1;677;670:12;621:63;568:122;:::o;696:139::-;742:5;780:6;767:20;758:29;;796:33;823:5;796:33;:::i;:::-;696:139;;;;:::o;841:474::-;909:6;917;966:2;954:9;945:7;941:23;937:32;934:119;;;972:79;;:::i;:::-;934:119;1092:1;1117:53;1162:7;1153:6;1142:9;1138:22;1117:53;:::i;:::-;1107:63;;1063:117;1219:2;1245:53;1290:7;1281:6;1270:9;1266:22;1245:53;:::i;:::-;1235:63;;1190:118;841:474;;;;;:::o;1321:118::-;1408:24;1426:5;1408:24;:::i;:::-;1403:3;1396:37;1321:118;;:::o;1445:222::-;1538:4;1576:2;1565:9;1561:18;1553:26;;1589:71;1657:1;1646:9;1642:17;1633:6;1589:71;:::i;:::-;1445:222;;;;:::o;1673:332::-;1794:4;1832:2;1821:9;1817:18;1809:26;;1845:71;1913:1;1902:9;1898:17;1889:6;1845:71;:::i;:::-;1926:72;1994:2;1983:9;1979:18;1970:6;1926:72;:::i;:::-;1673:332;;;;;:::o",
   "source": "pragma solidity >=0.4.21;\n\nimport \"./Pair.sol\";\n\ncontract Factory {\n    mapping(address => mapping(address => address)) public getPair;\n\n    event PairDeployed(address indexed token0, address indexed token1, address pair);\n\n    function createPair(address token0, address token1) external returns (address pair) {\n        // requirements\n        // TODO: Check not same token\n        // TODO: Check pair doesn't exist\n\n        // instantiate new pool\n        pair = address(new Pair(token0, token1));\n        \n        // record new pair address\n        getPair[token0][token1] = pair;\n        getPair[token1][token0] = pair;\n\n        emit PairDeployed(token0, token1, pair);\n    }\n}",
-  "sourcePath": "/Users/kitwiggin/senior_design/mvp_fe/contracts/Factory.sol",
+  "sourcePath": "/Users/kitwiggin/senior_design/WhaleSwapMVP/contracts/Factory.sol",
   "ast": {
     "absolutePath": "project:/contracts/Factory.sol",
     "exportedSymbols": {
@@ -2689,12 +2689,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xB799A044F71e16C7EEB027b6c47474AE6cF09a16",
-      "transactionHash": "0xd9e468cfbbb970367267c11daef05f5d71139b1f2abb5cea4ba2f42a5d667090"
+      "address": "0x4527Fe902b6596D2e75c9E86a68955bE194B249A",
+      "transactionHash": "0x2b31651870f5cd4bf8c430d6b58c62f60d8991f9bcbe923ecd2a00ba5bd4885c"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-01-26T00:01:35.252Z",
+  "updatedAt": "2022-02-01T06:02:06.732Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

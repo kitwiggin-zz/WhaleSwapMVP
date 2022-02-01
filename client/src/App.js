@@ -3,6 +3,8 @@ import "./App.css";
 import React from "react";
 import ReadString from "./components/ReadString";
 import SetString from "./components/SetString";
+import Token1Info from "./components/Token1Info";
+import Token2Info from "./components/Token2Info";
 
 class App extends React.Component {
   state = { loading: true, drizzleState: null };
@@ -38,6 +40,30 @@ class App extends React.Component {
           drizzle={this.props.drizzle}
           drizzleState={this.state.drizzleState}
         />
+        <div>
+          <div>Current User Address (the one logged into MetaMask):</div>
+          <div>{this.state.drizzleState.accounts[0]}</div>
+        </div>
+        <div>
+          <div>
+            <h3>First Token Info:</h3>
+            <h5>Address of Token Contract:</h5>
+            <p>{this.props.drizzle.contracts.TestToken1.address}</p>
+            <Token1Info
+              drizzle={this.props.drizzle}
+              drizzleState={this.state.drizzleState}
+            />
+          </div>
+          <div>
+            <h3>Second Token Info:</h3>
+            <h5>Address of Token Contract:</h5>
+            <p>{this.props.drizzle.contracts.TestToken2.address}</p>
+            <Token2Info
+              drizzle={this.props.drizzle}
+              drizzleState={this.state.drizzleState}
+            />
+          </div>
+        </div>
       </div>
     );
   }
