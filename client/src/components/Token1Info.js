@@ -43,6 +43,10 @@ class Token1Info extends React.Component {
     const totalSupplyDataKey = contract.methods["totalSupply"].cacheCall();
     const symbolDataKey = contract.methods["symbol"].cacheCall();
     const creatorDataKey = contract.methods["creator"].cacheCall();
+    const balanceDataKey = contract.methods["balanceOf"].cacheCall(
+      "0xf54bbd0be46c50cd753b76b0a2bab7b2eb0c4f65"
+    );
+    console.log(balanceDataKey);
 
     // I'm pissed off cos i can't work out how to get a cacheCall for a bloody mapping
     // const balanceDataKey = contract.methods["balanceOf"].cacheCall();
@@ -53,9 +57,20 @@ class Token1Info extends React.Component {
       totalSupplyDK: totalSupplyDataKey,
       symbolDK: symbolDataKey,
       creatorDK: creatorDataKey,
-      // balanceDK: balanceDataKey,
+      balanceDK: "getting balance...",
     });
   }
+
+  getBalance = (address) => {
+    console.log("inside getBalance");
+    const balanceDataKey =
+      this.props.drizzle.contracts.TestToken1.methods["balanceOf"].cacheCall(
+        address
+      );
+    return this.props.drizzleState.contracts.TestToken1.balanceOf[
+      balanceDataKey
+    ].value;
+  };
 
   render() {
     // get the contract state from drizzleState
@@ -74,6 +89,14 @@ class Token1Info extends React.Component {
     //   );
     //   console.log(pp);
     // }
+
+    // if (creator && creator.value) {
+    //   this.setState({ balanceDK: "we have creator" });
+    // }
+
+    // FINALLY THIS WORKS YAY
+    console.log("hey");
+    console.log(TestToken1.balanceOf[this.state.balanceDK]);
 
     // if it exists, then we display its value
     return (
@@ -101,7 +124,7 @@ class Token1Info extends React.Component {
             </tr>
             <tr>
               <td>Balance of Creator:</td>
-              <td>:(</td>
+              <td>{creator && this.state.balanceDK} </td>
             </tr>
           </tbody>
         </table>
