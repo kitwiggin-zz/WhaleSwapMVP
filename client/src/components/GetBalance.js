@@ -4,9 +4,7 @@ class GetBalance extends React.Component {
   state = { dataKey: null };
 
   componentDidMount() {
-    const { drizzle, drizzleState, tokenContract, address } = this.props;
-
-    console.log("Inside GetBalance component");
+    const { drizzle, tokenContract, address } = this.props;
 
     const contract = drizzle.contracts[tokenContract];
 
