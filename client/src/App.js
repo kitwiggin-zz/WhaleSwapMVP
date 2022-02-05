@@ -3,8 +3,7 @@ import "./App.css";
 import React from "react";
 import ReadString from "./components/ReadString";
 import SetString from "./components/SetString";
-import Token1Info from "./components/Token1Info";
-import Token2Info from "./components/Token2Info";
+import TokenInfo from "./components/TokenInfo";
 
 class App extends React.Component {
   state = { loading: true, drizzleState: null };
@@ -49,18 +48,20 @@ class App extends React.Component {
             <h3>First Token Info:</h3>
             <h5>Address of Token Contract:</h5>
             <p>{this.props.drizzle.contracts.TestToken1.address}</p>
-            <Token1Info
+            <TokenInfo
               drizzle={this.props.drizzle}
               drizzleState={this.state.drizzleState}
+              token="TestToken1"
             />
           </div>
           <div>
             <h3>Second Token Info:</h3>
             <h5>Address of Token Contract:</h5>
             <p>{this.props.drizzle.contracts.TestToken2.address}</p>
-            <Token2Info
+            <TokenInfo
               drizzle={this.props.drizzle}
               drizzleState={this.state.drizzleState}
+              token="TestToken2"
             />
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import GetBalance from "./GetBalance";
 
 /*
 I'm quite unhappy with this - I have spent a while trying to make a generic
@@ -15,41 +16,31 @@ this is a simulation etc.)
 
 Long story short, I couldn't work it out so I'm just going to do it the
 hard coded way and ill come back to it if possible :)
+
+I WORKED OUT HOW TO MAKE IT GENERIC BY USING THE CONTRACT NAME YAYYYYYYY!!!!
 */
 
-/*
-TODO: Work out how tf do get data from a bloody mapping
-*/
-
-class Token1Info extends React.Component {
+class TokenInfo extends React.Component {
   state = {
     tokenNameDK: null,
     totalSupplyDK: null,
     symbolDK: null,
     creatorDK: null,
-    balanceDK: null,
   };
 
   componentDidMount() {
-    const { drizzle, drizzleState } = this.props;
+    const { drizzle, drizzleState, token } = this.props;
 
     console.log(drizzle);
     console.log(drizzleState);
 
-    const contract = drizzle.contracts.TestToken1;
+    const contract = drizzle.contracts[token];
 
     // let drizzle know we want to watch the `myString` method
     const tokenNameDataKey = contract.methods["name"].cacheCall();
     const totalSupplyDataKey = contract.methods["totalSupply"].cacheCall();
     const symbolDataKey = contract.methods["symbol"].cacheCall();
     const creatorDataKey = contract.methods["creator"].cacheCall();
-    const balanceDataKey = contract.methods["balanceOf"].cacheCall(
-      "0xf54bbd0be46c50cd753b76b0a2bab7b2eb0c4f65"
-    );
-    console.log(balanceDataKey);
-
-    // I'm pissed off cos i can't work out how to get a cacheCall for a bloody mapping
-    // const balanceDataKey = contract.methods["balanceOf"].cacheCall();
 
     // save the `dataKey` to local component state for later reference
     this.setState({
@@ -57,46 +48,18 @@ class Token1Info extends React.Component {
       totalSupplyDK: totalSupplyDataKey,
       symbolDK: symbolDataKey,
       creatorDK: creatorDataKey,
-      balanceDK: "getting balance...",
     });
   }
 
-  getBalance = (address) => {
-    console.log("inside getBalance");
-    const balanceDataKey =
-      this.props.drizzle.contracts.TestToken1.methods["balanceOf"].cacheCall(
-        address
-      );
-    return this.props.drizzleState.contracts.TestToken1.balanceOf[
-      balanceDataKey
-    ].value;
-  };
-
   render() {
     // get the contract state from drizzleState
-    const { TestToken1 } = this.props.drizzleState.contracts;
+    const token = this.props.drizzleState.contracts[this.props.token];
 
     // using the saved `dataKey`, get the variable we're interested in
-    const tokenName = TestToken1.name[this.state.tokenNameDK];
-    const totalSupply = TestToken1.totalSupply[this.state.totalSupplyDK];
-    const symbol = TestToken1.symbol[this.state.symbolDK];
-    const creator = TestToken1.creator[this.state.creatorDK];
-    //const creatorBalance = TestToken1.balanceOf;
-    // if (creator && creator.value) {
-    //   console.log(creator.value);
-    //   const pp = this.props.drizzle.contracts.TestToken1.methods.balanceOf(
-    //     creator.value
-    //   );
-    //   console.log(pp);
-    // }
-
-    // if (creator && creator.value) {
-    //   this.setState({ balanceDK: "we have creator" });
-    // }
-
-    // FINALLY THIS WORKS YAY
-    console.log("hey");
-    console.log(TestToken1.balanceOf[this.state.balanceDK]);
+    const tokenName = token.name[this.state.tokenNameDK];
+    const totalSupply = token.totalSupply[this.state.totalSupplyDK];
+    const symbol = token.symbol[this.state.symbolDK];
+    const creator = token.creator[this.state.creatorDK];
 
     // if it exists, then we display its value
     return (
@@ -124,7 +87,18 @@ class Token1Info extends React.Component {
             </tr>
             <tr>
               <td>Balance of Creator:</td>
-              <td>{creator && this.state.balanceDK} </td>
+              <td>
+                {creator ? (
+                  <GetBalance
+                    drizzle={this.props.drizzle}
+                    drizzleState={this.props.drizzleState}
+                    tokenContract={this.props.token}
+                    address={creator.value}
+                  />
+                ) : (
+                  "Could not get creator address"
+                )}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -133,4 +107,4 @@ class Token1Info extends React.Component {
   }
 }
 
-export default Token1Info;
+export default TokenInfo;
