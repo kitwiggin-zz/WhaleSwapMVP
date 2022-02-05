@@ -4,6 +4,7 @@ import React from "react";
 import ReadString from "./components/ReadString";
 import SetString from "./components/SetString";
 import TokenInfo from "./components/TokenInfo";
+import FactoryInfo from "./components/FactoryInfo";
 
 class App extends React.Component {
   state = { loading: true, drizzleState: null };
@@ -62,6 +63,17 @@ class App extends React.Component {
               drizzle={this.props.drizzle}
               drizzleState={this.state.drizzleState}
               token="TestToken2"
+            />
+          </div>
+        </div>
+        <div>
+          <div>
+            <h3>Factory Info:</h3>
+            <h5>Address of Factory Contract:</h5>
+            <p>{this.props.drizzle.contracts.Factory.address}</p>
+            <FactoryInfo
+              drizzle={this.props.drizzle}
+              drizzleState={this.state.drizzleState}
             />
           </div>
         </div>
