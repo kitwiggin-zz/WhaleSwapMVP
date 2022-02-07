@@ -20,7 +20,7 @@ contract Factory {
         return allPairs;
     }
 
-    function createPair(address token0, address token1)
+    function createPair(address token0, address token1, string memory token0Name, string memory token1Name)
         external
         returns (address pair)
     {
@@ -29,7 +29,7 @@ contract Factory {
         // TODO: Check pair doesn't exist
 
         // instantiate new pool
-        pair = address(new Pair(token0, token1));
+        pair = address(new Pair(token0, token1, token0Name, token1Name));
 
         // record new pair address
         getPair[token0][token1] = pair;

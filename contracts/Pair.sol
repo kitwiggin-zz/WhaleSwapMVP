@@ -13,6 +13,8 @@ contract Pair is ERC20 {
     address public factory;
     address public token0;
     address public token1;
+    string public token0Name;
+    string public token1Name;
 
     uint112 x;
     uint112 y;
@@ -22,10 +24,12 @@ contract Pair is ERC20 {
     uint256 public price1Cumulative;
     uint32 public lastBlockTimestamp;
 
-    constructor(address _token0, address _token1) ERC20("lWhale", "lWHL", 18) {
+    constructor(address _token0, address _token1, string memory _token0Name, string memory _token1Name) ERC20("lWhale", "lWHL", 18) {
         factory = msg.sender;
         token0 = _token0;
         token1 = _token1;
+        token0Name = _token0Name;
+        token1Name = _token1Name;
     }
 
     function getAmounts()

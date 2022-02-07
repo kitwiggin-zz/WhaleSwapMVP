@@ -11,7 +11,7 @@ class PairListElement extends React.Component {
     console.log("Pair List Address:");
     console.log(pairAddress);
 
-    //const contract = drizzle.contracts.MyStringStore;
+    const contract = drizzle.contracts.MyStringStore;
 
     // let drizzle know we want to watch the `myString` method
     const dataKey = contract.methods["myString"].cacheCall();

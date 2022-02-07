@@ -1,10 +1,9 @@
 import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
-import ReadString from "./components/ReadString";
-import SetString from "./components/SetString";
-import TokenInfo from "./components/TokenInfo";
-import FactoryInfo from "./components/FactoryInfo";
+import { Route, Routes } from 'react-router-dom'
+import MainPage from "./components/MainPage"
+import { BrowserRouter } from 'react-router-dom';
 
 class App extends React.Component {
   state = { loading: true, drizzleState: null };
@@ -32,52 +31,13 @@ class App extends React.Component {
     if (this.state.loading) return "Loading Drizzle...";
     return (
       <div className="App">
-        <ReadString
-          drizzle={this.props.drizzle}
-          drizzleState={this.state.drizzleState}
-        />
-        <SetString
-          drizzle={this.props.drizzle}
-          drizzleState={this.state.drizzleState}
-        />
-        <div>
-          <div>Current User Address (the one logged into MetaMask):</div>
-          <div>{this.state.drizzleState.accounts[0]}</div>
-        </div>
-        <div>
-          <div>
-            <h3>First Token Info:</h3>
-            <h5>Address of Token Contract:</h5>
-            <p>{this.props.drizzle.contracts.TestToken1.address}</p>
-            <TokenInfo
-              drizzle={this.props.drizzle}
-              drizzleState={this.state.drizzleState}
-              token="TestToken1"
-            />
-          </div>
-          <div>
-            <h3>Second Token Info:</h3>
-            <h5>Address of Token Contract:</h5>
-            <p>{this.props.drizzle.contracts.TestToken2.address}</p>
-            <TokenInfo
-              drizzle={this.props.drizzle}
-              drizzleState={this.state.drizzleState}
-              token="TestToken2"
-            />
-          </div>
-        </div>
-        <div>
-          <div>
-            <h3>Factory Info:</h3>
-            <h5>Address of Factory Contract:</h5>
-            <p>{this.props.drizzle.contracts.Factory.address}</p>
-            <FactoryInfo
-              drizzle={this.props.drizzle}
-              drizzleState={this.state.drizzleState}
-            />
-          </div>
-        </div>
-      </div>
+        <BrowserRouter>
+              <Routes>
+                <Route path='/main' render={() => <MainPage drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} /> } />
+                
+              </Routes>
+              </BrowserRouter>
+            </div>
     );
   }
 }
