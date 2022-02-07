@@ -1,5 +1,6 @@
 import React from "react";
 import CreatePair from "./CreatePair";
+import PairListElement from "./PairListElement";
 
 class FactoryInfo extends React.Component {
   state = { dataKey: null, allPairsDK: null };
@@ -26,9 +27,6 @@ class FactoryInfo extends React.Component {
     const allPairsLength = contract.allPairsLength[this.state.dataKey];
     const allPairs = contract.getAllPairs[this.state.allPairsDK];
 
-    console.log("hey");
-    console.log(this.props.drizzle.contracts.address);
-
     // if it exists, then we display its value
     return (
       <div>
@@ -38,6 +36,11 @@ class FactoryInfo extends React.Component {
           drizzleState={this.props.drizzleState}
         />
         <p>xx: {allPairs && allPairs.value}</p>
+        <PairListElement
+          drizzle={this.props.drizzle}
+          drizzleState={this.props.drizzleState}
+          pairAddress="0x21B66c757B41777652CDAAEBF9350E6Bd778a532"
+        />
       </div>
     );
   }

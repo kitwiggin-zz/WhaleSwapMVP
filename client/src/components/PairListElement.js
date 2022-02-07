@@ -1,34 +1,83 @@
 import React from "react";
 
+// Import Pair ABI to add the pair contract to drizzle
+import Pair from "./../contracts/Pair.json";
+
 class PairListElement extends React.Component {
-  state = { dataKey: null };
+  state = { name1DK: null, name2DK: null };
 
   componentDidMount() {
     const { drizzle, drizzleState, pairAddress } = this.props;
 
     console.log(drizzle);
     console.log(drizzleState);
-    console.log("Pair List Address:");
-    console.log(pairAddress);
 
-    //const contract = drizzle.contracts.MyStringStore;
+    if (this.props.pairAddress) {
+      this.addPairContract();
+    }
+
+    const contract =
+      drizzle.contracts[
+        `Pair${this.props.pairAddress.toLowerCase().slice(-4)}`
+      ];
 
     // let drizzle know we want to watch the `myString` method
-    const dataKey = contract.methods["myString"].cacheCall();
+    const xDataKey = contract.methods["token0"].cacheCall();
+    const yDataKey = contract.methods["token1"].cacheCall();
 
     // save the `dataKey` to local component state for later reference
-    this.setState({ dataKey });
+    this.setState({ name1DK: xDataKey, name2DK: yDataKey });
   }
 
-  render() {
-    // get the contract state from drizzleState
-    const { MyStringStore } = this.props.drizzleState.contracts;
+  addPairContract = async () => {
+    let contractName = `Pair${this.props.pairAddress.toLowerCase().slice(-4)}`;
 
-    // using the saved `dataKey`, get the variable we're interested in
-    const myString = MyStringStore.myString[this.state.dataKey];
+    if (
+      !Object.keys(this.props.drizzleState.contracts).includes(contractName)
+    ) {
+      let web3Contract = new this.props.drizzle.web3.eth.Contract(
+        Pair["abi"],
+        this.props.pairAddress
+      );
+      let contractName = `Pair${this.props.pairAddress
+        .toLowerCase()
+        .slice(-4)}`;
+
+      await this.props.drizzle.addContract({ contractName, web3Contract });
+    }
+  };
+
+  render() {
+    let name1 = null;
+    let name2 = null;
+
+    if (
+      this.props.drizzleState.contracts[
+        `Pair${this.props.pairAddress.toLowerCase().slice(-4)}`
+      ]
+    ) {
+      const pairContract =
+        this.props.drizzleState.contracts[
+          `Pair${this.props.pairAddress.toLowerCase().slice(-4)}`
+        ];
+      name1 = pairContract.token0[this.state.name1DK];
+      name2 = pairContract.token1[this.state.name2DK];
+    }
 
     // if it exists, then we display its value
-    return <p>Pair List Address: {this.props.pairAddress}</p>;
+    return (
+      <div>
+        <table>
+          <tbody>
+            <tr>
+              <td>Address: {this.props.pairAddress}</td>
+              <td>token 0 address: {name1 && name1.value}</td>
+              <td>token 1 address: {name2 && name2.value}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
   }
 }
 
