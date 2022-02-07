@@ -2,7 +2,7 @@ import React from "react";
 import CreatePair from "./CreatePair";
 
 class FactoryInfo extends React.Component {
-  state = { dataKey: null };
+  state = { dataKey: null, allPairsDK: null };
 
   componentDidMount() {
     const { drizzle } = this.props;
@@ -10,18 +10,24 @@ class FactoryInfo extends React.Component {
     const contract = drizzle.contracts.Factory;
 
     // let drizzle know we want to watch the `myString` method
-    const balanceDataKey = contract.methods["allPairsLength"].cacheCall();
+    const lengthDataKey = contract.methods["allPairsLength"].cacheCall();
+
+    const allPairsDataKey = contract.methods["getAllPairs"].cacheCall();
 
     // save the `dataKey` to local component state for later reference
-    this.setState({ dataKey: balanceDataKey });
+    this.setState({ dataKey: lengthDataKey, allPairsDK: allPairsDataKey });
   }
 
   render() {
     // get the contract state from drizzleState
-    const token = this.props.drizzleState.contracts.Factory;
+    const contract = this.props.drizzleState.contracts.Factory;
 
     // using the saved `dataKey`, get the variable we're interested in
-    const allPairsLength = token.allPairsLength[this.state.dataKey];
+    const allPairsLength = contract.allPairsLength[this.state.dataKey];
+    const allPairs = contract.getAllPairs[this.state.allPairsDK];
+
+    console.log("hey");
+    console.log(this.props.drizzle.contracts.address);
 
     // if it exists, then we display its value
     return (
@@ -31,6 +37,7 @@ class FactoryInfo extends React.Component {
           drizzle={this.props.drizzle}
           drizzleState={this.props.drizzleState}
         />
+        <p>xx: {allPairs && allPairs.value}</p>
       </div>
     );
   }

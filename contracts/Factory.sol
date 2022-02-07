@@ -1,7 +1,5 @@
 pragma solidity >=0.4.21;
 
-pragma solidity >=0.4.21;
-
 import "./Pair.sol";
 
 contract Factory {
@@ -16,6 +14,10 @@ contract Factory {
 
     function allPairsLength() external view returns (uint256) {
         return allPairs.length;
+    }
+
+    function getAllPairs() public view returns (address[] memory) {
+        return allPairs;
     }
 
     function createPair(address token0, address token1)
