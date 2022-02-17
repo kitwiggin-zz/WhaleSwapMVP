@@ -2,13 +2,12 @@ import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
 import { Route, Routes,  Link,
-  Outlet } from 'react-router-dom'
+  Outlet, useNavigate, useParams } from 'react-router-dom'
 import { BrowserRouter as Router} from 'react-router-dom';
 import TokenInfo from "./components/TokenInfo";
 import FactoryInfo from "./components/FactoryInfo";
 import PairsInfo from "./components/PairsInfo";
 //import PairListElement from "./components/PairListElement";
-import { useNavigate, useParams } from 'react-router-dom';
 import SpecificPairPage from "./components/SpecificPairPage";
 
 class App extends React.Component {
