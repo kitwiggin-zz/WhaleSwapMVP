@@ -1,16 +1,25 @@
 
 import React from "react";
+import { useParams } from 'react-router-dom';
 import ReadString from "./ReadString";
 import SetString from "./SetString";
 import TokenInfo from "./TokenInfo";
 import FactoryInfo from "./FactoryInfo";
 import PairsInfo from "./PairsInfo";
 
-class MainPage extends React.Component {
+export function withRouter(Children){
+  return(props)=>{
+
+     const match  = {params: useParams()};
+     return <Children {...props}  match = {match}/>
+ }
+}
+
+class MainPage extends React.Component  {
   state = { loading: true, drizzleState: null };
 
   componentDidMount() {
-    const { drizzle } = this.props;
+    const { drizzle } = this.props.params;
 
     // subscribe to changes in the store
     this.unsubscribe = drizzle.store.subscribe(() => {
@@ -94,4 +103,4 @@ class MainPage extends React.Component {
   }
 }
 
-export default MainPage;
+export default withRouter(MainPage);

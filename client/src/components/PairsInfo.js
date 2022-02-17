@@ -1,5 +1,8 @@
 import React from "react";
 import PairListElement from "./PairListElement";
+import { BrowserRouter as Router} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+//const navigate = useNavigate();
 
 class PairsInfo extends React.Component {
   state = { pairsDataKey: null };
@@ -37,22 +40,29 @@ class PairsInfo extends React.Component {
     return (
 
         //<p>Pair List Address: {this.props.pairAddress}</p>
-
-        <div> 
+        <Router>
+<div> 
             {p?.map((add) => (
-                <div onClick = {event =>  window.location.href='https://stackoverflow.com/questions/62861269/attempted-import-error-usehistory-is-not-exported-from-react-router-dom'} >
-                <p> <PairListElement 
+                
+               <a href={'/pair/' + add}>  <p> <PairListElement 
             
             drizzle={this.props.drizzle}
             drizzleState={this.props.drizzleState}
              pairAddress = {add}>
              </PairListElement>
-             </p>
-             </div> ))}
+             </p> </a>
+             ))}
 
-    </div>);
+    </div> 
+    </Router>);
+
+
+
   
   }
 }
+//<div onClick = {event =>  window.location.href='https://stackoverflow.com/questions/62861269/attempted-import-error-usehistory-is-not-exported-from-react-router-dom'} >
+
+
 
 export default PairsInfo;
