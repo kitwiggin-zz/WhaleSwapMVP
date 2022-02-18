@@ -1,7 +1,7 @@
 import React from "react";
 
 class CreatePair extends React.Component {
-  state = { stackId: null, address1: "", address2: "" };
+  state = { stackId: null, address1: "", address2: "", name1: "", name2:"" };
 
   handleChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
@@ -24,6 +24,8 @@ class CreatePair extends React.Component {
     console.log("handling submit");
     console.log(this.state.address1);
     console.log(this.state.address2);
+    console.log(this.state.name1);
+    console.log(this.state.name2);
 
     const { drizzle, drizzleState } = this.props;
     const contract = drizzle.contracts.Factory;
@@ -32,12 +34,14 @@ class CreatePair extends React.Component {
     const stackId = contract.methods["createPair"].cacheSend(
       this.state.address1,
       this.state.address2,
+      this.state.name1,
+      this.state.name2,
       {
         from: drizzleState.accounts[0],
       }
     );
 
-    this.setState({ stackId: stackId, address1: "", address2: "" });
+    this.setState({ stackId: stackId, address1: "", address2: "", name1: "", name2:""});
   };
 
   getTxStatus = () => {
@@ -62,15 +66,32 @@ class CreatePair extends React.Component {
         <div>
           <input
             type="text"
-            value={this.state.address1}
+            //value={this.state.address1}
+            defaultValue={"address1"}
             onChange={this.handleChange}
             id="address1"
           />
           <input
             type="text"
-            value={this.state.address2}
+            //value={this.state.address2}
+            defaultValue={"address2"}
             onChange={this.handleChange}
             id="address2"
+          />
+          <input
+            type="text"
+            //value={this.state.name1}
+            defaultValue={"name1"}
+            onChange={this.handleChange}
+            id="name1"
+          />
+          <input
+            type="text"
+            //className={"name2"}
+            //value={this.state.name2}
+            defaultValue={"name2"}
+            onChange={this.handleChange}
+            id="name2"
           />
           <button type="submit" onClick={this.handleSubmit}>
             Submit

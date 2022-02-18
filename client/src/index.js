@@ -9,6 +9,9 @@ import MyStringStore from "./contracts/MyStringStore.json";
 import Factory from "./contracts/Factory.json";
 import Token1 from "./contracts/TestToken1.json";
 import Token2 from "./contracts/TestToken2.json";
+/*import { Router, HashRouter as history } from 'react-router-dom';
+// Your routes.js file
+import routes from './routes';*/
 
 // let drizzle know what contracts we want and how to access our test blockchain
 const options = {
@@ -37,3 +40,8 @@ const drizzle = new Drizzle(options);
 
 ReactDOM.render(<App drizzle={drizzle} />, document.getElementById("root"));
 //ReactDOM.render(<App />, document.getElementById("root"));
+
+//ReactDOM.render(<App drizzle={drizzle} />, <Router routes={routes} history={history} />, document.getElementById("root"));
+
+
+

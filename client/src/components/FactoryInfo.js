@@ -36,11 +36,6 @@ class FactoryInfo extends React.Component {
           drizzleState={this.props.drizzleState}
         />
         <p>xx: {allPairs && allPairs.value}</p>
-        <PairListElement
-          drizzle={this.props.drizzle}
-          drizzleState={this.props.drizzleState}
-          pairAddress="0x21B66c757B41777652CDAAEBF9350E6Bd778a532"
-        />
       </div>
     );
   }

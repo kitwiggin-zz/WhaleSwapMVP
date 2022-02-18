@@ -1,17 +1,14 @@
 import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
-import { Route, Routes,  Link,
-  Outlet, useNavigate, useParams } from 'react-router-dom'
-import { BrowserRouter as Router} from 'react-router-dom';
+import ReadString from "./components/ReadString";
+import SetString from "./components/SetString";
 import TokenInfo from "./components/TokenInfo";
 import FactoryInfo from "./components/FactoryInfo";
 import PairsInfo from "./components/PairsInfo";
-//import PairListElement from "./components/PairListElement";
-import SpecificPairPage from "./components/SpecificPairPage";
 
 class App extends React.Component {
-  state = { loading: true, drizzleState: null};
+  state = { loading: true, drizzleState: null };
 
   componentDidMount() {
     const { drizzle } = this.props;
@@ -26,8 +23,6 @@ class App extends React.Component {
         this.setState({ loading: false, drizzleState });
       }
     });
-
-
   }
 
   componentWillUnmount() {
@@ -35,10 +30,17 @@ class App extends React.Component {
   }
 
   render() {
-
     if (this.state.loading) return "Loading Drizzle...";
     return (
       <div className="App">
+        <ReadString
+          drizzle={this.props.drizzle}
+          drizzleState={this.state.drizzleState}
+        />
+        <SetString
+          drizzle={this.props.drizzle}
+          drizzleState={this.state.drizzleState}
+        />
         <div>
           <div>Current User Address (the one logged into MetaMask):</div>
           <div>{this.state.drizzleState.accounts[0]}</div>
@@ -82,40 +84,13 @@ class App extends React.Component {
             <PairsInfo
               drizzle={this.props.drizzle}
               drizzleState={this.state.drizzleState}
-
+              
             />
-            
           </div>
-
-          </div>
-        <Router>
-      
-        
-
-        <div> 
-              <Routes>
-              <Route path='/pair/:address' element={<SpecificPairPage />} />
-                                
-              </Routes>
-              </div>
-              </Router>
-            </div>
-
+        </div>
+      </div>
     );
   }
 }
-
-/*function SpecificPairPage(){
-  let { address } = useParams();
-  render() {
-  return(
-      <div>
-          HIIII
-      </div>
-
-  );
-}*/
-//<Route path='/main' element={< />} />
-//render={() => <MainPage drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} /> } />
 
 export default App;
