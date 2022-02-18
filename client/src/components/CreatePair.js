@@ -1,7 +1,7 @@
 import React from "react";
 
 class CreatePair extends React.Component {
-  state = { stackId: null, address1: "", address2: "", name1: "", name2:"" };
+  state = { stackId: null, address1: "", address2: "", name1: "", name2: "" };
 
   handleChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
@@ -41,7 +41,13 @@ class CreatePair extends React.Component {
       }
     );
 
-    this.setState({ stackId: stackId, address1: "", address2: "", name1: "", name2:""});
+    this.setState({
+      stackId: stackId,
+      address1: "",
+      address2: "",
+      name1: "",
+      name2: "",
+    });
   };
 
   getTxStatus = () => {
@@ -67,21 +73,21 @@ class CreatePair extends React.Component {
           <input
             type="text"
             //value={this.state.address1}
-            defaultValue={"address1"}
+            placeholder={"address1"}
             onChange={this.handleChange}
             id="address1"
           />
           <input
             type="text"
             //value={this.state.address2}
-            defaultValue={"address2"}
+            placeholder={"address2"}
             onChange={this.handleChange}
             id="address2"
-          />
+          ></input>
           <input
             type="text"
             //value={this.state.name1}
-            defaultValue={"name1"}
+            placeholder={"name1"}
             onChange={this.handleChange}
             id="name1"
           />
@@ -89,7 +95,7 @@ class CreatePair extends React.Component {
             type="text"
             //className={"name2"}
             //value={this.state.name2}
-            defaultValue={"name2"}
+            placeholder={"name2"}
             onChange={this.handleChange}
             id="name2"
           />

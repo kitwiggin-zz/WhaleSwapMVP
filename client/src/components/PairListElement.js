@@ -22,8 +22,8 @@ class PairListElement extends React.Component {
       ];
 
     // let drizzle know we want to watch the `myString` method
-    const xDataKey = contract.methods["token0"].cacheCall();
-    const yDataKey = contract.methods["token1"].cacheCall();
+    const xDataKey = contract.methods["token0Name"].cacheCall();
+    const yDataKey = contract.methods["token1Name"].cacheCall();
 
     // save the `dataKey` to local component state for later reference
     this.setState({ name1DK: xDataKey, name2DK: yDataKey });
@@ -50,6 +50,7 @@ class PairListElement extends React.Component {
   render() {
     let name1 = null;
     let name2 = null;
+    let pairInfo = [];
 
     if (
       this.props.drizzleState.contracts[
@@ -60,8 +61,15 @@ class PairListElement extends React.Component {
         this.props.drizzleState.contracts[
           `Pair${this.props.pairAddress.toLowerCase().slice(-4)}`
         ];
-      name1 = pairContract.token0[this.state.name1DK];
-      name2 = pairContract.token1[this.state.name2DK];
+      name1 = pairContract.token0Name[this.state.name1DK];
+      name2 = pairContract.token1Name[this.state.name2DK];
+
+      // pairInfo = {
+      //   address: this.props.pairAddress,
+      //   token0Name: name1 && name1.value,
+      //   //token0Name: name1.value,
+      //   token1Name: name2 && name2.value,
+      // };
     }
 
     // if it exists, then we display its value
@@ -71,12 +79,13 @@ class PairListElement extends React.Component {
           <tbody>
             <tr>
               <td>Address: {this.props.pairAddress}</td>
-              <td>token 0 address: {name1 && name1.value}</td>
-              <td>token 1 address: {name2 && name2.value}</td>
+              <td>token 0 Name: {name1 && name1.value}</td>
+              <td>token 1 Name: {name2 && name2.value}</td>
             </tr>
           </tbody>
         </table>
       </div>
+      //pairInfo
     );
   }
 }

@@ -2,8 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
+import Router from "./Router";
+import PairPage from "./components/PairPage";
 //import * as serviceWorker from "./serviceWorker";
 // import drizzle functions and contract artifact
+import { BrowserRouter } from "react-router-dom";
 import { Drizzle, generateStore } from "@drizzle/store";
 import MyStringStore from "./contracts/MyStringStore.json";
 import Factory from "./contracts/Factory.json";
@@ -38,10 +41,13 @@ const drizzle = new Drizzle(options);
  * our lives easier :)
  */
 
-ReactDOM.render(<App drizzle={drizzle} />, document.getElementById("root"));
-//ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <div>
+    <BrowserRouter>
+      <Router drizzle={drizzle} />
+    </BrowserRouter>
+  </div>,
+  document.getElementById("root")
+);
 
 //ReactDOM.render(<App drizzle={drizzle} />, <Router routes={routes} history={history} />, document.getElementById("root"));
-
-
-
