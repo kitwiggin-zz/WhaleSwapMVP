@@ -2,10 +2,6 @@ import React from "react";
 import CreatePair from "./CreatePair";
 import PairListElement from "./PairListElement";
 
-// Part 1: Create list of PairListElement Components passing each address from allPairs into a unique component
-// Part 2: Make each element in the list clickable. When you click a pairelement it will navigate you to a new page
-// where the address of that pair can be accessed so we can get that pair's info! :) <3
-
 class FactoryInfo extends React.Component {
   state = { dataKey: null, allPairsDK: null };
 
@@ -31,9 +27,6 @@ class FactoryInfo extends React.Component {
     const allPairsLength = contract.allPairsLength[this.state.dataKey];
     const allPairs = contract.getAllPairs[this.state.allPairsDK];
 
-    console.log("hey");
-    console.log(this.props.drizzle.contracts.address);
-
     // if it exists, then we display its value
     return (
       <div>
@@ -43,8 +36,6 @@ class FactoryInfo extends React.Component {
           drizzleState={this.props.drizzleState}
         />
         <p>xx: {allPairs && allPairs.value}</p>
-        
-        
       </div>
     );
   }

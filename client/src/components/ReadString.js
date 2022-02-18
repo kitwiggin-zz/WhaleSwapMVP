@@ -6,9 +6,6 @@ class ReadString extends React.Component {
   componentDidMount() {
     const { drizzle, drizzleState } = this.props;
 
-    console.log(drizzle);
-    console.log(drizzleState);
-
     const contract = drizzle.contracts.MyStringStore;
 
     // let drizzle know we want to watch the `myString` method
