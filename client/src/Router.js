@@ -9,7 +9,10 @@ class Router extends React.Component {
       <div>
         <Routes>
           <Route path="/" element={<App drizzle={this.props.drizzle} />} />
-          <Route path="/pair" element={<PairPage address={"peepoo"} />} />
+          <Route
+            path="/pair"
+            element={<PairPage drizzle={this.props.drizzle} />}
+          />
         </Routes>
       </div>
     );

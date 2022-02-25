@@ -50,7 +50,6 @@ class PairListElement extends React.Component {
   render() {
     let name1 = null;
     let name2 = null;
-    let pairInfo = [];
 
     if (
       this.props.drizzleState.contracts[
@@ -63,13 +62,6 @@ class PairListElement extends React.Component {
         ];
       name1 = pairContract.token0Name[this.state.name1DK];
       name2 = pairContract.token1Name[this.state.name2DK];
-
-      // pairInfo = {
-      //   address: this.props.pairAddress,
-      //   token0Name: name1 && name1.value,
-      //   //token0Name: name1.value,
-      //   token1Name: name2 && name2.value,
-      // };
     }
 
     // if it exists, then we display its value
