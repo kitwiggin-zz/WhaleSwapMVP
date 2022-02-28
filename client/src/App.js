@@ -1,12 +1,9 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
-import { Route, Routes } from "react-router-dom";
 import TokenInfo from "./components/TokenInfo";
 import FactoryInfo from "./components/FactoryInfo";
 import PairsInfo from "./components/PairsInfo";
 //import PairListElement from "./components/PairListElement";
-import PairPage from "./components/PairPage";
 
 class App extends React.Component {
   state = { loading: true, drizzleState: null };

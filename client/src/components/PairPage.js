@@ -46,11 +46,13 @@ class PairPage extends React.Component {
       <div>
         <h3>Pair Info:</h3>
         {this.state.currPair && (
-          <PairPageInfo
-            drizzle={this.props.drizzle}
-            drizzleState={this.state.drizzleState}
-            contractName={this.state.currPair}
-          />
+          <>
+            <PairPageInfo
+              drizzle={this.props.drizzle}
+              drizzleState={this.state.drizzleState}
+              contractName={this.state.currPair}
+            />
+          </>
         )}
       </div>
     );

@@ -1,6 +1,5 @@
 import React from "react";
 import CreatePair from "./CreatePair";
-import PairListElement from "./PairListElement";
 
 class FactoryInfo extends React.Component {
   state = { dataKey: null, allPairsDK: null };

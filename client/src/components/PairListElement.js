@@ -7,7 +7,7 @@ class PairListElement extends React.Component {
   state = { name1DK: null, name2DK: null };
 
   componentDidMount() {
-    const { drizzle, drizzleState, pairAddress } = this.props;
+    const { drizzle, drizzleState } = this.props;
 
     console.log(drizzle);
     console.log(drizzleState);

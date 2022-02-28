@@ -7,18 +7,18 @@ class CreatePair extends React.Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  setValue = (value) => {
-    const { drizzle, drizzleState } = this.props;
-    const contract = drizzle.contracts.Factory;
+  // setValue = (value) => {
+  //   const { drizzle, drizzleState } = this.props;
+  //   const contract = drizzle.contracts.Factory;
 
-    // let drizzle know we want to call the `set` method with `value`
-    const stackId = contract.methods["set"].cacheSend(value, {
-      from: drizzleState.accounts[0],
-    });
+  //   // let drizzle know we want to call the `set` method with `value`
+  //   const stackId = contract.methods["set"].cacheSend(value, {
+  //     from: drizzleState.accounts[0],
+  //   });
 
-    // save the `stackId` for later reference
-    this.setState({ stackId });
-  };
+  //   // save the `stackId` for later reference
+  //   this.setState({ stackId });
+  // };
 
   handleSubmit = () => {
     console.log("handling submit");
