@@ -1,6 +1,6 @@
 import React from "react";
 import PairListElement from "./PairListElement";
-import { Table, Pagination, Row, Col, Divider, Slider } from "antd";
+//import { Table, Pagination, Row, Col, Divider, Slider } from "antd";
 //const navigate = useNavigate();
 
 class PairsInfo extends React.Component {

@@ -99,7 +99,7 @@ class CreatePair extends React.Component {
             onChange={this.handleChange}
             id="name2"
           />
-          <button type="submit" onClick={this.handleSubmit}>
+          <button class="btn btn-dark" onClick={this.handleSubmit}>
             Submit
           </button>
         </div>

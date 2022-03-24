@@ -67,15 +67,15 @@ class TokenInfo extends React.Component {
               <th>Token Details:</th>
             </tr>
             <tr>
-              <td>Name of First Token:</td>
+              <td>Name of Token:</td>
               <td>{tokenName && tokenName.value}</td>
             </tr>
             <tr>
-              <td>Symbol of First Token:</td>
+              <td>Symbol of Token:</td>
               <td>{symbol && symbol.value}</td>
             </tr>
             <tr>
-              <td>Total Supply of First Token:</td>
+              <td>Total Supply of Token:</td>
               <td>{totalSupply && totalSupply.value}</td>
             </tr>
             <tr>
