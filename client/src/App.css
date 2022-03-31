@@ -40,16 +40,84 @@
 } 
 .factory{ 
   position: absolute;
-  top: 80%;
+  top: 88%;
 	width: 100%  
 } 
+
+#secondpagediv{
+  top: 10%;
+  background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#table1{
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  border: 2px solid rgb(98, 11, 238);
+  width: 800px;
+  height: 200px;
+}
+
+#tokentable{
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+  border: 2px solid rgb(98, 11, 238);
+  width: 800px;
+  height: 200px;
+}
+
+th {
+  border-bottom: 1px solid rgb(98, 11, 238);
+  border-right: 1px solid rgb(98, 11, 238);
+
+}
+  
+td {
+  text-align: center;
+  border-right: 1px solid rgb(98, 11, 238);
+  border-bottom: 1px solid rgb(98, 11, 238);
+  
+}
+
+.modalll {
+
+  text-align: center;
+  background-color: red;
+  position: absolute;
+  }
+
+.centerrr{
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.modal_content {
+  margin: auto;
+  text-align: center;
+  background-color: rgb(219, 178, 239);
+  z-index: 1;
+  width: 10%
+}
+tr {
+  text-align: center;
+  border-right: 1px solid rgb(98, 11, 238);
+  border-bottom: 1px solid rgb(98, 11, 238);
+  
+}
+
 .pairs{ 
   position: absolute;
-  top: 110%;
+  top: 130%;
 	width: 100%  
 } 
 h3{
-  color: red;
+  color: darkslateblue;
+  font-weight: bold
 }
 
 
@@ -62,11 +130,14 @@ h3{
     transform: rotate(360deg);
   }
 }
-
-.App {
+.color{
   background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+}
+.App {
+  background-color : lavender;
   text-align: center;
   width: 100%;
   height: 100%;
   font-family: 'Lato', sans-serif;
+  
 }

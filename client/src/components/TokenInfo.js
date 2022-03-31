@@ -61,7 +61,7 @@ class TokenInfo extends React.Component {
     // if it exists, then we display its value
     return (
       <div>
-        <table>
+        <table id="tokentable">
           <tbody>
             <tr>
               <th>Token Details:</th>

@@ -34,7 +34,7 @@ class FactoryInfo extends React.Component {
           drizzle={this.props.drizzle}
           drizzleState={this.props.drizzleState}
         />
-        <p>xx: {allPairs && allPairs.value}</p>
+        <p>Address of the Latest Pair Produced: {allPairs && allPairs.value}</p>
       </div>
     );
   }

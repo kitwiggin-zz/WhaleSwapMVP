@@ -43,7 +43,7 @@ class PairPage extends React.Component {
   render() {
     if (this.state.loading) return "Loading Drizzle...";
     return (
-      <div>
+      <div id="secondpagediv">
         <h3>Pair Info:</h3>
         {this.state.currPair && (
           <>

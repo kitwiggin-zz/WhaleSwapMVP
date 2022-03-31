@@ -67,15 +67,18 @@ class PairListElement extends React.Component {
     // if it exists, then we display its value
     return (
       <div>
-        <table>
-          <tbody>
-            <tr>
-              <td>Address: {this.props.pairAddress}</td>
-              <td>token 0 Name: {name1 && name1.value}</td>
-              <td>token 1 Name: {name2 && name2.value}</td>
-            </tr>
-          </tbody>
-        </table>
+        <table id="table1">
+        <tr>
+          <th>Address</th>
+          <th>Token 1 Name</th>
+          <th>Token 2 Name</th>
+        </tr>
+        <tr>
+          <td>{this.props.pairAddress}</td>
+          <td>{name1 && name1.value}</td>
+          <td>{name2 && name2.value}</td>
+        </tr>
+      </table>
       </div>
       //pairInfo
     );
@@ -83,3 +86,12 @@ class PairListElement extends React.Component {
 }
 
 export default PairListElement;
+
+/*          <tbody>
+            <tr>
+              <td>Address: {this.props.pairAddress}</td>
+              <td>token 0 Name: {name1 && name1.value}</td>
+              <td>token 1 Name: {name2 && name2.value}</td>
+            </tr>
+          </tbody>
+        </table>*/
