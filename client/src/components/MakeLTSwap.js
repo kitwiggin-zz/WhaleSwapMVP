@@ -1,11 +1,12 @@
 import React from "react";
 
-class MakeSwap extends React.Component {
+class MakeLTSwap extends React.Component {
   state = {
     app1DK: null,
     swapDK: null,
     amountIn: 0,
     recipient: "",
+    numBlocks: 1,
   };
 
   handleChange = (e) => {
@@ -40,6 +41,7 @@ class MakeSwap extends React.Component {
       swapDK: swapDK,
       amountIn: 0,
       recipient: "",
+      numBlocks: 0,
     });
   };
 
@@ -63,9 +65,10 @@ class MakeSwap extends React.Component {
     let x = parseInt(this.props.x);
     let y = parseInt(this.props.y);
     let k = parseInt(this.props.k);
-    let expectedReturn = (y - k / (x + parseInt(this.state.amountIn))).toFixed(
-      4
-    );
+    let numBlocks =
+      parseInt(this.state.numBlocks) > 0 ? parseInt(this.state.numBlocks) : 1;
+    let xInRate = parseInt(this.state.amountIn) / numBlocks;
+    let expectedReturn = (numBlocks * (y - k / (x + xInRate))).toFixed(4);
     let idealReturn = (y / x) * parseInt(this.state.amountIn);
     let priceImpact = (
       (100 * (idealReturn - expectedReturn)) /
@@ -80,6 +83,12 @@ class MakeSwap extends React.Component {
             placeholder={"Amount of Token In"}
             onChange={this.handleChange}
             id="amountIn"
+          />
+          <input
+            type="text"
+            placeholder={"Number of blocks"}
+            onChange={this.handleChange}
+            id="numBlocks"
           />
           <input
             type="text"
@@ -107,4 +116,4 @@ class MakeSwap extends React.Component {
   }
 }
 
-export default MakeSwap;
+export default MakeLTSwap;

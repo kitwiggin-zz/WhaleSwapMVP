@@ -1,6 +1,7 @@
 import React from "react";
 import AddLiquidity from "./AddLiquidity";
 import MakeSwap from "./MakeSwap";
+import MakeLTSwap from "./MakeLTSwap";
 
 class PairPageInfo extends React.Component {
   state = { tkn0AddDK: null, tkn1AddDK: null, amountsDK: null };
@@ -50,7 +51,16 @@ class PairPageInfo extends React.Component {
         <h3>Pool info:</h3>
         <p> Amount of token 1: {amounts && amounts.value["amount0"]}</p>
         <p> Amount of token 2: {amounts && amounts.value["amount1"]}</p>
-        {Add1 && Add2 && (
+        <p>
+          {" "}
+          Spot price of a single Token1:{" "}
+          {amounts &&
+            (amounts.value["amount1"] / amounts.value["amount0"]).toFixed(
+              4
+            )}{" "}
+          coins of Token 2
+        </p>
+        {Add1 && Add2 && amounts && (
           <>
             <AddLiquidity
               drizzle={this.props.drizzle}
@@ -60,24 +70,64 @@ class PairPageInfo extends React.Component {
               address2={Add2.value}
             />
             <div>
-              <h3>Swap Token 1 for Token 2</h3>
-              <MakeSwap
-                drizzle={this.props.drizzle}
-                drizzleState={this.props.drizzleState}
-                addressIn={Add1.value}
-                addressOut={Add2.value}
-                tokenInName={"TestToken1"}
-              />
-            </div>
-            <div>
-              <h3>Swap Token 2 for Token 1</h3>
-              <MakeSwap
-                drizzle={this.props.drizzle}
-                drizzleState={this.props.drizzleState}
-                addressIn={Add2.value}
-                addressOut={Add1.value}
-                tokenInName={"TestToken2"}
-              />
+              <div>
+                <h2>Instant Swaps:</h2>
+                <div>
+                  <h3>Swap Token 1 for Token 2</h3>
+                  <MakeSwap
+                    drizzle={this.props.drizzle}
+                    drizzleState={this.props.drizzleState}
+                    addressIn={Add1.value}
+                    addressOut={Add2.value}
+                    tokenInName={"TestToken1"}
+                    x={amounts.value["amount0"]}
+                    y={amounts.value["amount1"]}
+                    k={amounts.value["amount0"] * amounts.value["amount1"]}
+                  />
+                </div>
+                <div>
+                  <h3>Swap Token 2 for Token 1</h3>
+                  <MakeSwap
+                    drizzle={this.props.drizzle}
+                    drizzleState={this.props.drizzleState}
+                    addressIn={Add2.value}
+                    addressOut={Add1.value}
+                    tokenInName={"TestToken2"}
+                    x={amounts.value["amount1"]}
+                    y={amounts.value["amount0"]}
+                    k={amounts.value["amount0"] * amounts.value["amount1"]}
+                  />
+                </div>
+              </div>
+              <div>
+                <h2>Long Term (TWAP) Swaps:</h2>
+                <div>
+                  <h3>Swap Token 1 for Token 2</h3>
+                  <MakeLTSwap
+                    drizzle={this.props.drizzle}
+                    drizzleState={this.props.drizzleState}
+                    addressIn={Add1.value}
+                    addressOut={Add2.value}
+                    tokenInName={"TestToken1"}
+                    x={amounts.value["amount0"]}
+                    y={amounts.value["amount1"]}
+                    k={amounts.value["amount0"] * amounts.value["amount1"]}
+                  />
+                </div>
+                <div>
+                  <h3>Swap Token 2 for Token 1</h3>
+                  <MakeLTSwap
+                    drizzle={this.props.drizzle}
+                    drizzleState={this.props.drizzleState}
+                    addressIn={Add2.value}
+                    addressOut={Add1.value}
+                    tokenInName={"TestToken2"}
+                    x={amounts.value["amount1"]}
+                    y={amounts.value["amount0"]}
+                    k={amounts.value["amount0"] * amounts.value["amount1"]}
+                  />
+                </div>
+              </div>
             </div>
           </>
         )}
