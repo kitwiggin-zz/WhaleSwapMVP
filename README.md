@@ -13,7 +13,7 @@ The way WhaleSwap does this is by holding the amount to be swapped in a virtual 
 
 ### 1. Install Packages
 
-Run the command 'npm install' in both the route directory, 'whaleswap', and the client directory, 'whaleswap/client'.
+Run the command 'npm install' in both the route directory, 'whaleswapmvp', and the client directory, 'whaleswapmvp/client'.
 
 ### 2. Set up a local blockchain to run the contracts
 
