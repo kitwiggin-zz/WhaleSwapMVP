@@ -10520,7 +10520,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-04-05T18:49:08.409Z",
+  "updatedAt": "2022-04-05T19:03:55.766Z",
   "devdoc": {
     "author": "Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/tokens/ERC20.sol)Modified from Uniswap (https://github.com/Uniswap/uniswap-v2-core/blob/master/contracts/UniswapV2ERC20.sol)",
     "details": "Do not manually set balances without updating totalSupply, as the sum of all user balances must not exceed it.",

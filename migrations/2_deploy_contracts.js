@@ -1,4 +1,3 @@
-const MyStringStore = artifacts.require("MyStringStore");
 const Factory = artifacts.require("Factory");
 const Router = artifacts.require("Router");
 const TestToken1 = artifacts.require("TestToken1");
@@ -9,9 +8,6 @@ module.exports = function (deployer) {
   deployer.deploy(Factory).then(() => {
     return deployer.deploy(Router, Factory.address);
   });
-
-  // Tutorial Contract
-  deployer.deploy(MyStringStore);
 
   // Tokens
   deployer.deploy(TestToken1);

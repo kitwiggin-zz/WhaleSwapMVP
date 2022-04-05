@@ -6,7 +6,6 @@ import PairsInfo from "./components/PairsInfo";
 import image from "./a.png";
 import user from "./user.png";
 import PopUp from "./components/PopUp";
-//import PairListElement from "./components/PairListElement";
 
 class App extends React.Component {
   state = { loading: true, drizzleState: null, seen: false };
