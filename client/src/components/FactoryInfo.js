@@ -23,18 +23,20 @@ class FactoryInfo extends React.Component {
     const contract = this.props.drizzleState.contracts.Factory;
 
     // using the saved `dataKey`, get the variable we're interested in
-    const allPairsLength = contract.allPairsLength[this.state.dataKey];
+    //const allPairsLength = contract.allPairsLength[this.state.dataKey];
     const allPairs = contract.getAllPairs[this.state.allPairsDK];
-
+    let allPairsLength = 0;
+    if (allPairs) {
+      allPairsLength = allPairs.value.length;
+    }
     // if it exists, then we display its value
     return (
       <div>
-        <p>Number of Pairs: {allPairsLength && allPairsLength.value}</p>
+        <p>Number of Pairs: {allPairsLength && allPairsLength}</p>
         <CreatePair
           drizzle={this.props.drizzle}
           drizzleState={this.props.drizzleState}
         />
-        <p>Address of the Latest Pair Produced: {allPairs && allPairs.value}</p>
       </div>
     );
   }

@@ -1,4 +1,4 @@
-pragma solidity >=0.4.21;
+pragma solidity >=0.8.0;
 
 import "./Pair.sol";
 
@@ -20,23 +20,31 @@ contract Factory {
         return allPairs;
     }
 
-    function createPair(address token0, address token1, string memory token0Name, string memory token1Name)
-        external
-        returns (address pair)
-    {
+    function createPair(
+        address _token0,
+        address _token1,
+        string memory _token0Name,
+        string memory _token1Name,
+        uint256 _interval
+    ) external returns (address pair) {
         // requirements
-        require(token0 != token1, "Tokens cannot be the same.");
-        // TODO: Check pair doesn't exist
+        require(_token0 != _token1, "WHALESWAP: Tokens cannot be the same");
+        require(
+            getPair[_token0][_token1] == address(0x0),
+            "WHALESWAP: Pair already exists"
+        );
 
         // instantiate new pool
-        pair = address(new Pair(token0, token1, token0Name, token1Name));
+        pair = address(
+            new Pair(_token0, _token1, _token0Name, _token1Name, _interval)
+        );
 
         // record new pair address
-        getPair[token0][token1] = pair;
-        getPair[token1][token0] = pair;
+        getPair[_token0][_token1] = pair;
+        getPair[_token1][_token0] = pair;
 
         allPairs.push(pair);
 
-        emit PairDeployed(token0, token1, pair);
+        emit PairDeployed(_token0, _token1, pair);
     }
 }

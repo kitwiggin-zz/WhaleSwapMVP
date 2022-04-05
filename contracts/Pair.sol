@@ -24,7 +24,13 @@ contract Pair is ERC20 {
     uint256 public price1Cumulative;
     uint32 public lastBlockTimestamp;
 
-    constructor(address _token0, address _token1, string memory _token0Name, string memory _token1Name) ERC20("lWhale", "lWHL", 18) {
+    constructor(
+        address _token0,
+        address _token1,
+        string memory _token0Name,
+        string memory _token1Name,
+        uint256 _twammIntervalSize
+    ) ERC20("lWhale", "lWHL", 18) {
         factory = msg.sender;
         token0 = _token0;
         token1 = _token1;

@@ -1,32 +1,20 @@
 import React from "react";
 
 class CreatePair extends React.Component {
-  state = { stackId: null, address1: "", address2: "", name1: "", name2: "" };
+  state = {
+    stackId: null,
+    address1: "",
+    address2: "",
+    name1: "",
+    name2: "",
+    intervalSize: null,
+  };
 
   handleChange = (e) => {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  // setValue = (value) => {
-  //   const { drizzle, drizzleState } = this.props;
-  //   const contract = drizzle.contracts.Factory;
-
-  //   // let drizzle know we want to call the `set` method with `value`
-  //   const stackId = contract.methods["set"].cacheSend(value, {
-  //     from: drizzleState.accounts[0],
-  //   });
-
-  //   // save the `stackId` for later reference
-  //   this.setState({ stackId });
-  // };
-
   handleSubmit = () => {
-    console.log("handling submit");
-    console.log(this.state.address1);
-    console.log(this.state.address2);
-    console.log(this.state.name1);
-    console.log(this.state.name2);
-
     const { drizzle, drizzleState } = this.props;
     const contract = drizzle.contracts.Factory;
 
@@ -36,6 +24,7 @@ class CreatePair extends React.Component {
       this.state.address2,
       this.state.name1,
       this.state.name2,
+      this.state.intervalSize,
       {
         from: drizzleState.accounts[0],
       }
@@ -47,6 +36,7 @@ class CreatePair extends React.Component {
       address2: "",
       name1: "",
       name2: "",
+      intervalSize: null,
     });
   };
 
@@ -72,34 +62,35 @@ class CreatePair extends React.Component {
         <div>
           <input
             type="text"
-            //value={this.state.address1}
             placeholder={"address1"}
             onChange={this.handleChange}
             id="address1"
           />
           <input
             type="text"
-            //value={this.state.address2}
             placeholder={"address2"}
             onChange={this.handleChange}
             id="address2"
           ></input>
           <input
             type="text"
-            //value={this.state.name1}
             placeholder={"name1"}
             onChange={this.handleChange}
             id="name1"
           />
           <input
             type="text"
-            //className={"name2"}
-            //value={this.state.name2}
             placeholder={"name2"}
             onChange={this.handleChange}
             id="name2"
           />
-          <button class="btn btn-dark" onClick={this.handleSubmit}>
+          <input
+            type="text"
+            placeholder={"Interval"}
+            onChange={this.handleChange}
+            id="intervalSize"
+          />
+          <button className="btn btn-dark" onClick={this.handleSubmit}>
             Submit
           </button>
         </div>

@@ -6,7 +6,7 @@ class MakeLTSwap extends React.Component {
     swapDK: null,
     amountIn: 0,
     recipient: "",
-    numBlocks: 1,
+    numIntervals: 1,
   };
 
   handleChange = (e) => {
@@ -41,7 +41,7 @@ class MakeLTSwap extends React.Component {
       swapDK: swapDK,
       amountIn: 0,
       recipient: "",
-      numBlocks: 0,
+      numIntervals: 0,
     });
   };
 
@@ -65,10 +65,12 @@ class MakeLTSwap extends React.Component {
     let x = parseInt(this.props.x);
     let y = parseInt(this.props.y);
     let k = parseInt(this.props.k);
-    let numBlocks =
-      parseInt(this.state.numBlocks) > 0 ? parseInt(this.state.numBlocks) : 1;
-    let xInRate = parseInt(this.state.amountIn) / numBlocks;
-    let expectedReturn = (numBlocks * (y - k / (x + xInRate))).toFixed(4);
+    let numIntervals =
+      parseInt(this.state.numIntervals) > 0
+        ? parseInt(this.state.numIntervals)
+        : 1;
+    let xInRate = parseInt(this.state.amountIn) / numIntervals;
+    let expectedReturn = (numIntervals * (y - k / (x + xInRate))).toFixed(4);
     let idealReturn = (y / x) * parseInt(this.state.amountIn);
     let priceImpact = (
       (100 * (idealReturn - expectedReturn)) /
@@ -86,9 +88,9 @@ class MakeLTSwap extends React.Component {
           />
           <input
             type="text"
-            placeholder={"Number of blocks"}
+            placeholder={"Number of Intervals (50 blocks)"}
             onChange={this.handleChange}
-            id="numBlocks"
+            id="numIntervals"
           />
           <input
             type="text"

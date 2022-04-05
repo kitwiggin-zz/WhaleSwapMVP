@@ -9,10 +9,6 @@ class PairPageInfo extends React.Component {
   componentDidMount() {
     const { drizzle, drizzleState, contractName } = this.props;
 
-    console.log(drizzle);
-    console.log(drizzleState);
-    // console.log(contractName);
-
     const contract = drizzle.contracts[contractName];
 
     // let drizzle know we want to watch the `myString` method

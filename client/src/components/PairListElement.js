@@ -68,17 +68,19 @@ class PairListElement extends React.Component {
     return (
       <div>
         <table id="table1">
-        <tr>
-          <th>Address</th>
-          <th>Token 1 Name</th>
-          <th>Token 2 Name</th>
-        </tr>
-        <tr>
-          <td>{this.props.pairAddress}</td>
-          <td>{name1 && name1.value}</td>
-          <td>{name2 && name2.value}</td>
-        </tr>
-      </table>
+          <tbody>
+            <tr>
+              <th>Address</th>
+              <th>Token 1 Name</th>
+              <th>Token 2 Name</th>
+            </tr>
+            <tr>
+              <td>{this.props.pairAddress}</td>
+              <td>{name1 && name1.value}</td>
+              <td>{name2 && name2.value}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       //pairInfo
     );
