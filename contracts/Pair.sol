@@ -116,6 +116,8 @@ contract Pair is ERC20 {
             );
         }
         _mint(_to, liquidity); // ERC-20 function
+        // _update()
+
         x = x + uint112(optAmountX);
         y = y + uint112(optAmountY);
 
@@ -166,40 +168,77 @@ contract Pair is ERC20 {
     //     emit BurnLiquidity();
     // }
 
+    // Params: amountIn, addressOut, and tokenInIsX (bool: T if xIn, F if yIn)
+    // This disregards fees for now
     function swap(
-        uint256 amount0Out,
-        uint256 amount1Out,
-        address to
+        uint256 _amountIn,
+        bool _tokenInIsX,
+        address _to
     ) external {
-        uint256 balance0;
-        uint256 balance1;
-        if (amount0Out > 0) {
-            ERC20(token0).transfer(to, amount0Out);
+        // executeVirtualOrders / computeVirtualBalances -- get x and y up to date
+        if (_tokenInIsX) {
+            ERC20(token0).transferFrom(msg.sender, address(this), _amountIn);
+            uint256 yOut = (_amountIn * uint256(y)) / (_amountIn + uint256(x));
+            if (yOut > 0) {
+                ERC20(token1).transfer(_to, yOut);
+                // _update(x + uint112(_amountIn), y - uint112(yOut), x, y)
+                x += uint112(_amountIn);
+                y -= uint112(yOut);
+            }
+        } else {
+            ERC20(token1).transferFrom(msg.sender, address(this), _amountIn);
+            uint256 xOut = (_amountIn * uint256(x)) / (_amountIn + uint256(y));
+            if (xOut > 0) {
+                ERC20(token0).transfer(_to, xOut);
+                // _update(x - uint112(xOut), y + uint112(_amountIn), x, y)
+                x -= uint112(xOut);
+                y += uint112(_amountIn);
+            }
         }
-        if (amount1Out > 0) {
-            ERC20(token1).transfer(to, amount1Out);
-        }
-        balance0 = ERC20(token0).balanceOf(address(this));
-        balance1 = ERC20(token1).balanceOf(address(this));
-
-        uint256 amount0In = balance0 > x - amount0Out
-            ? balance0 - (x - amount0Out)
-            : 0;
-        uint256 amount1In = balance1 > y - amount1Out
-            ? balance1 - (y - amount1Out)
-            : 0;
-
-        uint256 balance0Adjusted = (balance0 * 1000) - (amount0In * 3);
-        uint256 balance1Adjusted = (balance1 * 1000) - (amount1In * 3);
-        require(
-            balance0Adjusted * balance1Adjusted >= uint256(x) * y * (1000**2),
-            "Whaleswap: K"
-        );
-
-        _update(balance0, balance1, x, y);
-
         emit Swap();
     }
+
+    // function swap(
+    //     uint256 amount0Out,
+    //     uint256 amount1Out,
+    //     address to
+    // ) external {
+    //     uint256 balance0;
+    //     uint256 balance1;
+    //     if (amount0Out > 0) {
+    //         ERC20(token0).transfer(to, amount0Out);
+    //     }
+    //     if (amount1Out > 0) {
+    //         ERC20(token1).transfer(to, amount1Out);
+    //     }
+    //     balance0 = ERC20(token0).balanceOf(address(this));
+    //     balance1 = ERC20(token1).balanceOf(address(this));
+
+    //     // Makes sure that nothing bad happens (neggy numbies) if a mismatch
+    //     // occurs between 0out here and balance change
+    //     uint256 amount0In = balance0 > x - amount0Out
+    //         ? balance0 - (x - amount0Out)
+    //         : 0;
+    //     uint256 amount1In = balance1 > y - amount1Out
+    //         ? balance1 - (y - amount1Out)
+    //         : 0;
+
+    //     // This is a check to make sure calculations aren't way off / not balanced across the two pools.
+    //     // Multiply balances by 1000 to make sure that subtracting amountIn*3 doesn't give negative.
+    //     // Multiply by three - Want to make it bigger than actual change (newBalance-In)
+    //     // - However, factor must be greater than 2 because when multiplying the size of both pools, most
+    //     // extreme case will have a price impact of 50% (when Xin = x). So doubling both might = new k
+    //     uint256 balance0Adjusted = (balance0 * 1000) - (amount0In * 3);
+    //     uint256 balance1Adjusted = (balance1 * 1000) - (amount1In * 3);
+    //     require(
+    //         balance0Adjusted * balance1Adjusted >= uint256(x) * y * (1000**2),
+    //         "Whaleswap: K"
+    //     );
+
+    //     _update(balance0, balance1, x, y);
+
+    //     emit Swap();
+    // }
 
     /// @notice execute long term swap buying Y & selling X
     /// @param _intervalNumber - the block number when LTO ends

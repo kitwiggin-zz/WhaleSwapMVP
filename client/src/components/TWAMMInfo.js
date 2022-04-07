@@ -58,9 +58,8 @@ class TWAMMInfo extends React.Component {
                   <MakeLTSwap
                     drizzle={this.props.drizzle}
                     drizzleState={this.props.drizzleState}
-                    addressIn={add1.value}
-                    addressOut={add2.value}
-                    tokenInName={"TestToken1"}
+                    contractName={this.props.contractName}
+                    testTokenInNumber={"1"}
                     x={amounts.value["amount0"]}
                     y={amounts.value["amount1"]}
                     k={amounts.value["amount0"] * amounts.value["amount1"]}
@@ -71,9 +70,8 @@ class TWAMMInfo extends React.Component {
                   <MakeLTSwap
                     drizzle={this.props.drizzle}
                     drizzleState={this.props.drizzleState}
-                    addressIn={add2.value}
-                    addressOut={add1.value}
-                    tokenInName={"TestToken2"}
+                    contractName={this.props.contractName}
+                    testTokenInNumber={"2"}
                     x={amounts.value["amount1"]}
                     y={amounts.value["amount0"]}
                     k={amounts.value["amount0"] * amounts.value["amount1"]}

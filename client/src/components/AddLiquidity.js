@@ -38,7 +38,7 @@ class AddLiquidity extends React.Component {
     ].cacheSend(pairContract.address, amount2, {
       from: drizzleState.accounts[0],
     });
-    // Should change to pair.mint rather than router.addLiquidity
+
     const addLiqDK = await pairContract.methods["mint"].cacheSend(
       drizzleState.accounts[0],
       amount1,
@@ -109,7 +109,7 @@ class AddLiquidity extends React.Component {
           <GetBalance
             drizzle={this.props.drizzle}
             drizzleState={this.props.drizzleState}
-            tokenContract={"TestToken2"}
+            tokenContract={"TestToken1"}
             address={this.props.drizzleState.accounts[0]}
           />
         </div>
@@ -118,7 +118,7 @@ class AddLiquidity extends React.Component {
           <GetBalance
             drizzle={this.props.drizzle}
             drizzleState={this.props.drizzleState}
-            tokenContract={"TestToken1"}
+            tokenContract={"TestToken2"}
             address={this.props.drizzleState.accounts[0]}
           />
         </div>

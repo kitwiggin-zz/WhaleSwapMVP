@@ -13,22 +13,26 @@ class MakeSwap extends React.Component {
   };
 
   handleSubmit = async () => {
-    const { drizzle, drizzleState, addressIn, addressOut, tokenInName } =
+    const { drizzle, drizzleState, contractName, testTokenInNumber } =
       this.props;
 
-    const router = drizzle.contracts["Router"];
+    const pairContract = drizzle.contracts[contractName];
 
     const amountIn = parseInt(this.state.amountIn);
 
-    const app1DK = await drizzle.contracts[tokenInName].methods[
-      "approve"
-    ].cacheSend(drizzle.contracts["Router"].address, amountIn, {
+    // TestToken + testTokenInNumber breaks if TestToken2 is put in first...
+    // This is the case throughout the app though. Would be nice to fix.
+    const app1DK = await drizzle.contracts[
+      "TestToken" + testTokenInNumber
+    ].methods["approve"].cacheSend(pairContract.address, amountIn, {
       from: drizzleState.accounts[0],
     });
 
-    const swapDK = await router.methods["swapExactTokensForTokens"].cacheSend(
+    let isX = testTokenInNumber === "1";
+
+    const swapDK = await pairContract.methods["swap"].cacheSend(
       amountIn,
-      [addressIn, addressOut],
+      isX,
       this.state.recipient,
       {
         from: drizzleState.accounts[0],

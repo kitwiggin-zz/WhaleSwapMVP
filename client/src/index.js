@@ -4,18 +4,13 @@ import "./index.css";
 import Router from "./Router";
 import { BrowserRouter } from "react-router-dom";
 import { Drizzle } from "@drizzle/store";
-//import MyStringStore from "./contracts/MyStringStore.json";
 import Factory from "./contracts/Factory.json";
 import Token1 from "./contracts/TestToken1.json";
 import Token2 from "./contracts/TestToken2.json";
-import RouterContract from "./contracts/Router.json";
-/*import { Router, HashRouter as history } from 'react-router-dom';
-// Your routes.js file
-import routes from './routes';*/
 
 // let drizzle know what contracts we want and how to access our test blockchain
 const options = {
-  contracts: [Factory, Token1, Token2, RouterContract],
+  contracts: [Factory, Token1, Token2],
   web3: {
     fallback: {
       type: "ws",
@@ -46,5 +41,3 @@ ReactDOM.render(
   </div>,
   document.getElementById("root")
 );
-
-//ReactDOM.render(<App drizzle={drizzle} />, <Router routes={routes} history={history} />, document.getElementById("root"));

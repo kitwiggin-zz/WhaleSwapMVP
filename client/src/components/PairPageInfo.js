@@ -91,9 +91,8 @@ class PairPageInfo extends React.Component {
                   <MakeSwap
                     drizzle={this.props.drizzle}
                     drizzleState={this.props.drizzleState}
-                    addressIn={Add1.value}
-                    addressOut={Add2.value}
-                    tokenInName={"TestToken1"}
+                    contractName={this.props.contractName}
+                    testTokenInNumber={"1"}
                     x={amounts.value["amount0"]}
                     y={amounts.value["amount1"]}
                     k={amounts.value["amount0"] * amounts.value["amount1"]}
@@ -104,13 +103,22 @@ class PairPageInfo extends React.Component {
                   <MakeSwap
                     drizzle={this.props.drizzle}
                     drizzleState={this.props.drizzleState}
+                    contractName={this.props.contractName}
+                    testTokenInNumber={"2"}
+                    x={amounts.value["amount1"]}
+                    y={amounts.value["amount0"]}
+                    k={amounts.value["amount0"] * amounts.value["amount1"]}
+                  />
+                  {/* <MakeSwap
+                    drizzle={this.props.drizzle}
+                    drizzleState={this.props.drizzleState}
                     addressIn={Add2.value}
                     addressOut={Add1.value}
                     tokenInName={"TestToken2"}
                     x={amounts.value["amount1"]}
                     y={amounts.value["amount0"]}
                     k={amounts.value["amount0"] * amounts.value["amount1"]}
-                  />
+                  /> */}
                 </div>
 
                 {this.state.seen1 ? (
