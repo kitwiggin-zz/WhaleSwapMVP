@@ -6,9 +6,12 @@ import PairsInfo from "./components/PairsInfo";
 import image from "./a.png";
 import user from "./user.png";
 import PopUp from "./components/PopUp";
+import PopUp2 from "./components/PopUp2";
+import PopUp3 from "./components/PopUp3";
+import PopUp4 from "./components/PopUp4";
 
 class App extends React.Component {
-  state = { loading: true, drizzleState: null, seen: false };
+  state = { loading: true, drizzleState: null, seen: false , seen2: false, seen3: false , seen4: false };
 
   componentDidMount() {
     const { drizzle } = this.props;
@@ -37,6 +40,28 @@ class App extends React.Component {
     console.log(this.state.seen);
   };
 
+  togglePop2 = () => {
+    this.setState({
+      seen2: !this.state.seen2,
+    });
+    console.log("togglePop2");
+  };
+
+
+  togglePop3 = () => {
+    this.setState({
+      seen3: !this.state.seen3,
+    });
+    console.log("togglePop3");
+  };
+
+  togglePop4 = () => {
+    this.setState({
+      seen4: !this.state.seen4,
+    });
+    console.log("togglePop4");
+  };
+
   render() {
     if (this.state.loading) return "Loading Drizzle...";
 
@@ -60,7 +85,7 @@ class App extends React.Component {
           <div>{this.state.drizzleState.accounts[0]}</div>
         </div>
         <div>
-          <div className="left-column color">
+          <div className="left-column color" onClick={this.togglePop2}>
             <h3>First Token:</h3>
             <h5>Address of Token Contract:</h5>
             <p>{this.props.drizzle.contracts.TestToken1.address}</p>
@@ -70,7 +95,7 @@ class App extends React.Component {
               token="TestToken1"
             />
           </div>
-          <div className="right-column color">
+          <div className="right-column color" onClick={this.togglePop2}>
             <h3>Second Token:</h3>
             <h5>Address of Token Contract:</h5>
             <p>{this.props.drizzle.contracts.TestToken2.address}</p>
@@ -80,9 +105,10 @@ class App extends React.Component {
               token="TestToken2"
             />
           </div>
+          {this.state.seen2 ? <PopUp2 toggle={this.togglePop2} /> : null}
         </div>
-
-        <div className="factory App">
+        <div> 
+        <div className="factory App" onClick={this.togglePop3}>
           <h3>Factory Info:</h3>
           <h5>Address of Factory Contract:</h5>
           <p>{this.props.drizzle.contracts.Factory.address}</p>
@@ -91,14 +117,16 @@ class App extends React.Component {
             drizzleState={this.state.drizzleState}
           />
         </div>
-
-        <div className="pairs App">
+        {this.state.seen3 ? <PopUp3 toggle={this.togglePop3} /> : null}
+        </div>
+        <div className="pairs App" onClick={this.togglePop4}>
           <h3>Pairs Info:</h3>
           <PairsInfo
             drizzle={this.props.drizzle}
             drizzleState={this.state.drizzleState}
           />
         </div>
+        {this.state.seen4 ? <PopUp4 toggle={this.togglePop4} /> : null}
       </div>
     );
   }

@@ -2,9 +2,11 @@ import React from "react";
 import AddLiquidity from "./AddLiquidity";
 import MakeSwap from "./MakeSwap";
 import MakeLTSwap from "./MakeLTSwap";
+import PairPopUp1 from "./PairPopUp1";
+import PairPopUp2 from "./PairPopUp2";
 
 class PairPageInfo extends React.Component {
-  state = { tkn0AddDK: null, tkn1AddDK: null, amountsDK: null };
+  state = { tkn0AddDK: null, tkn1AddDK: null, amountsDK: null, seen1: false, seen2: false };
 
   componentDidMount() {
     const { drizzle, drizzleState, contractName } = this.props;
@@ -23,6 +25,18 @@ class PairPageInfo extends React.Component {
       amountsDK: getAmounts,
     });
   }
+
+  togglePop1 = () => {
+    this.setState({
+      seen1: !this.state.seen1,
+    });
+  };
+
+  togglePop2 = () => {
+    this.setState({
+      seen2: !this.state.seen2,
+    });
+  };
 
   render() {
     let Add1 = null;
@@ -66,7 +80,8 @@ class PairPageInfo extends React.Component {
               address2={Add2.value}
             />
             <div>
-              <div>
+
+              <div onClick={this.togglePop1}>
                 <h2>Instant Swaps:</h2>
                 <div>
                   <h3>Swap Token 1 for Token 2</h3>
@@ -94,8 +109,11 @@ class PairPageInfo extends React.Component {
                     k={amounts.value["amount0"] * amounts.value["amount1"]}
                   />
                 </div>
+
+                {this.state.seen1 ? <PairPopUp1 toggle={this.togglePop1} /> : null}
               </div>
-              <div>
+
+              <div onClick={this.togglePop2}>
                 <h2>Long Term (TWAP) Swaps:</h2>
                 <div>
                   <h3>Swap Token 1 for Token 2</h3>
@@ -123,6 +141,7 @@ class PairPageInfo extends React.Component {
                     k={amounts.value["amount0"] * amounts.value["amount1"]}
                   />
                 </div>
+                {this.state.seen2 ? <PairPopUp2 toggle={this.togglePop2} /> : null}
               </div>
             </div>
           </>

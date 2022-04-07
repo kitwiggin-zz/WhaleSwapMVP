@@ -32,16 +32,16 @@
  
 .left-column{ 
   float:left; 
-	width: 50% 
+  width: 50% 
 } 
 .right-column{ 
   float:right; 
-	width: 50%  
+  width: 50%  
 } 
 .factory{ 
   position: absolute;
   top: 88%;
-	width: 100%  
+  width: 100%  
 } 
 
 #secondpagediv{
@@ -101,7 +101,10 @@ td {
   text-align: center;
   background-color: rgb(219, 178, 239);
   z-index: 1;
-  width: 10%
+  top: 8%;
+  left: 65%;
+  width: 20%;
+  position: absolute;
 }
 tr {
   text-align: center;
@@ -113,7 +116,7 @@ tr {
 .pairs{ 
   position: absolute;
   top: 130%;
-	width: 100%  
+  width: 100%  
 } 
 h3{
   color: darkslateblue;
@@ -141,3 +144,4 @@ h3{
   font-family: 'Lato', sans-serif;
   
 }
+
