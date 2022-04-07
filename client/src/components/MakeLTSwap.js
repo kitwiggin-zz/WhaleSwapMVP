@@ -17,9 +17,6 @@ class MakeLTSwap extends React.Component {
     const { drizzle, drizzleState, contractName, testTokenInNumber } =
       this.props;
 
-    console.log(drizzle);
-    console.log(drizzleState);
-
     const pairContract = drizzle.contracts[contractName];
 
     const amountIn = parseInt(this.state.amountIn);

@@ -15,8 +15,6 @@ class AddLiquidity extends React.Component {
   };
 
   handleSubmit = async () => {
-    console.log("handling submit");
-
     const { drizzle, drizzleState, contractName } = this.props;
 
     const pairContract = drizzle.contracts[contractName];

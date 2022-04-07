@@ -64,33 +64,6 @@ contract Pair is ERC20 {
         blockInterval = orderPools.orderExpireInterval;
     }
 
-    // Utility function
-    function _update(
-        uint256 balance0,
-        uint256 balance1,
-        uint112 _x,
-        uint112 _y
-    ) private {
-        // Block timestamp calculations
-        uint32 blockTimestamp = uint32(block.timestamp % 2**32);
-        uint32 timeElapsed = blockTimestamp - lastBlockTimestamp;
-
-        // Add to cumulative price
-        if (timeElapsed > 0 && _x != 0 && _y != 0) {
-            price0Cumulative +=
-                uint256(UQ112x112.encode(_y).uqdiv(_x)) *
-                timeElapsed;
-            price1Cumulative +=
-                uint256(UQ112x112.encode(_x).uqdiv(_y)) *
-                timeElapsed;
-        }
-
-        // Update contract state variables
-        x = uint112(balance0);
-        y = uint112(balance1);
-        lastBlockTimestamp = blockTimestamp;
-    }
-
     /// @notice method for providing liquidity
     /// @param _amountInX - number of X tokens user wants to provide
     /// @param _amountInY - number of Y tokens user wants to provide
@@ -100,6 +73,7 @@ contract Pair is ERC20 {
         uint256 _amountInY
     ) external returns (uint256 liquidity) {
         // executeVirtualOrders / computeVirtualBalances -- get x and y up to date
+        //(x, y) = TWAMM.executeVirtualOrders(orderPools, x, y);
 
         (uint256 optAmountX, uint256 optAmountY) = _optimalLiquidity(
             _amountInX,
@@ -315,12 +289,12 @@ contract Pair is ERC20 {
     //     emit CancelLongTermOrder();
     // }
 
-    function withdrawLongTermOrder(
-        uint256 _id,
-        address _token0,
-        address _token1
-    ) external {
-        TWAMM.cancelVirtualOrder(orderPools, _id, _token0, _token1);
-        emit WithdrawLongTermOrder();
-    }
+    // function withdrawLongTermOrder(
+    //     uint256 _id,
+    //     address _token0,
+    //     address _token1
+    // ) external {
+    //     TWAMM.cancelVirtualOrder(orderPools, _id, _token0, _token1);
+    //     emit WithdrawLongTermOrder();
+    // }
 }
