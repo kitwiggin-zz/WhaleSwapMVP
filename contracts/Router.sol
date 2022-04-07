@@ -15,75 +15,75 @@ contract Router {
         factory = _factory;
     }
 
-    function _optimalLiquidity(
-        address token0,
-        address token1,
-        uint256 desiredAmount0,
-        uint256 desiredAmount1,
-        uint256 minAmount0,
-        uint256 minAmount1
-    ) internal view returns (uint256 amount0, uint256 amount1) {
-        address pair = Factory(factory).getPair(token0, token1);
-        (uint256 x, uint256 y) = Pair(pair).getAmounts();
-        // Empty pair with no liquidity
-        if (x == 0 && y == 0) {
-            (amount0, amount1) = (desiredAmount0, desiredAmount1);
-        } else {
-            uint256 optimalAmount1 = desiredAmount0.mul(y) / x;
-            if (optimalAmount1 <= desiredAmount1) {
-                // TODO: Add checks
-                require(optimalAmount1 >= minAmount1, "Invalid token1 minimum");
-                (amount0, amount1) = (desiredAmount0, optimalAmount1);
-            } else {
-                uint256 optimalAmount0 = desiredAmount1.mul(x) / y;
-                require(optimalAmount0 >= minAmount0, "Invalid Token0 minimum");
-                (amount0, amount1) = (optimalAmount0, desiredAmount1);
-            }
-        }
-    }
+    // function _optimalLiquidity(
+    //     address token0,
+    //     address token1,
+    //     uint256 desiredAmount0,
+    //     uint256 desiredAmount1,
+    //     uint256 minAmount0,
+    //     uint256 minAmount1
+    // ) internal view returns (uint256 amount0, uint256 amount1) {
+    //     address pair = Factory(factory).getPair(token0, token1);
+    //     (uint256 x, uint256 y) = Pair(pair).getAmounts();
+    //     // Empty pair with no liquidity
+    //     if (x == 0 && y == 0) {
+    //         (amount0, amount1) = (desiredAmount0, desiredAmount1);
+    //     } else {
+    //         uint256 optimalAmount1 = desiredAmount0.mul(y) / x;
+    //         if (optimalAmount1 <= desiredAmount1) {
+    //             // TODO: Add checks
+    //             require(optimalAmount1 >= minAmount1, "Invalid token1 minimum");
+    //             (amount0, amount1) = (desiredAmount0, optimalAmount1);
+    //         } else {
+    //             uint256 optimalAmount0 = desiredAmount1.mul(x) / y;
+    //             require(optimalAmount0 >= minAmount0, "Invalid Token0 minimum");
+    //             (amount0, amount1) = (optimalAmount0, desiredAmount1);
+    //         }
+    //     }
+    // }
 
-    function addLiquidity(
-        address token0,
-        address token1,
-        uint256 desiredAmount0,
-        uint256 desiredAmount1,
-        uint256 minAmount0,
-        uint256 minAmount1,
-        address to
-    ) external returns (uint256 liquidity) {
-        // Calculate optimal liquidity provision
-        // (Don't allow LPs to shift price)
-        (uint256 amount0, uint256 amount1) = _optimalLiquidity(
-            token0,
-            token1,
-            desiredAmount0,
-            desiredAmount1,
-            minAmount0,
-            minAmount1
-        );
-        // Fetch pair address
-        address pair = Factory(factory).getPair(token0, token1);
-        // transfer token0 & token1 to pair
-        ERC20(token0).transferFrom(msg.sender, pair, amount0);
-        ERC20(token1).transferFrom(msg.sender, pair, amount1);
-        // call pair.mint()
-        liquidity = Pair(pair).mint(to);
-    }
+    // function addLiquidity(
+    //     address token0,
+    //     address token1,
+    //     uint256 desiredAmount0,
+    //     uint256 desiredAmount1,
+    //     uint256 minAmount0,
+    //     uint256 minAmount1,
+    //     address to
+    // ) external returns (uint256 liquidity) {
+    //     // Calculate optimal liquidity provision
+    //     // (Don't allow LPs to shift price)
+    //     (uint256 amount0, uint256 amount1) = _optimalLiquidity(
+    //         token0,
+    //         token1,
+    //         desiredAmount0,
+    //         desiredAmount1,
+    //         minAmount0,
+    //         minAmount1
+    //     );
+    //     // Fetch pair address
+    //     address pair = Factory(factory).getPair(token0, token1);
+    //     // transfer token0 & token1 to pair
+    //     ERC20(token0).transferFrom(msg.sender, pair, amount0);
+    //     ERC20(token1).transferFrom(msg.sender, pair, amount1);
+    //     // call pair.mint()
+    //     liquidity = Pair(pair).mint(to);
+    // }
 
-    function burnLiquidity(
-        address token0,
-        address token1,
-        uint256 liq,
-        address to
-    ) public virtual returns (uint256 amount0, uint256 amount1) {
-        // Fetch pair address
-        address pair = Factory(factory).getPair(token0, token1);
-        // Transfer LP tokens
-        Pair(pair).transferFrom(msg.sender, pair, liq);
-        // Burn liquidity
-        (uint256 amount0Burn, uint256 amount1Burn) = Pair(pair).burn(to);
-        (amount0, amount1) = (amount0Burn, amount1Burn);
-    }
+    // function burnLiquidity(
+    //     address token0,
+    //     address token1,
+    //     uint256 liq,
+    //     address to
+    // ) public virtual returns (uint256 amount0, uint256 amount1) {
+    //     // Fetch pair address
+    //     address pair = Factory(factory).getPair(token0, token1);
+    //     // Transfer LP tokens
+    //     Pair(pair).transferFrom(msg.sender, pair, liq);
+    //     // Burn liquidity
+    //     (uint256 amount0Burn, uint256 amount1Burn) = Pair(pair).burn(to);
+    //     (amount0, amount1) = (amount0Burn, amount1Burn);
+    // }
 
     // *** SWAPPING ***
     function _swap(

@@ -2,7 +2,7 @@ import React from "react";
 import CreatePair from "./CreatePair";
 
 class FactoryInfo extends React.Component {
-  state = { dataKey: null, allPairsDK: null };
+  state = { allPairsDK: null };
 
   componentDidMount() {
     const { drizzle } = this.props;
@@ -10,12 +10,11 @@ class FactoryInfo extends React.Component {
     const contract = drizzle.contracts.Factory;
 
     // let drizzle know we want to watch the `myString` method
-    const lengthDataKey = contract.methods["allPairsLength"].cacheCall();
 
     const allPairsDataKey = contract.methods["getAllPairs"].cacheCall();
 
     // save the `dataKey` to local component state for later reference
-    this.setState({ dataKey: lengthDataKey, allPairsDK: allPairsDataKey });
+    this.setState({ allPairsDK: allPairsDataKey });
   }
 
   render() {

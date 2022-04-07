@@ -17,40 +17,32 @@ class AddLiquidity extends React.Component {
   handleSubmit = async () => {
     console.log("handling submit");
 
-    const { drizzle, drizzleState, address1, address2 } = this.props;
+    const { drizzle, drizzleState, contractName } = this.props;
 
     console.log(drizzle);
     console.log(drizzleState);
 
-    const router = drizzle.contracts["Router"];
+    const pairContract = drizzle.contracts[contractName];
 
     const amount1 = parseInt(this.state.amount1);
     const amount2 = parseInt(this.state.amount2);
 
-    const app1DK = drizzle.contracts["TestToken1"].methods["approve"].cacheSend(
-      drizzle.contracts["Router"].address,
-      amount1,
-      {
-        from: drizzleState.accounts[0],
-      }
-    );
+    const app1DK = await drizzle.contracts["TestToken1"].methods[
+      "approve"
+    ].cacheSend(pairContract.address, amount1, {
+      from: drizzleState.accounts[0],
+    });
 
-    const app2DK = drizzle.contracts["TestToken2"].methods["approve"].cacheSend(
-      drizzle.contracts["Router"].address,
-      amount2,
-      {
-        from: drizzleState.accounts[0],
-      }
-    );
-
-    const addLiqDK = await router.methods["addLiquidity"].cacheSend(
-      address1,
-      address2,
-      amount1,
-      amount2,
-      1,
-      1,
+    const app2DK = await drizzle.contracts["TestToken2"].methods[
+      "approve"
+    ].cacheSend(pairContract.address, amount2, {
+      from: drizzleState.accounts[0],
+    });
+    // Should change to pair.mint rather than router.addLiquidity
+    const addLiqDK = await pairContract.methods["mint"].cacheSend(
       drizzleState.accounts[0],
+      amount1,
+      amount2,
       {
         from: drizzleState.accounts[0],
       }

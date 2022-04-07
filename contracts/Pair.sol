@@ -1,28 +1,36 @@
-pragma solidity >=0.4.21;
+pragma solidity >=0.8.0;
 
 import "@rari-capital/solmate/src/tokens/ERC20.sol";
 
 import "./libraries/Math.sol";
-import "./libraries/SafeMath.sol";
 import "./libraries/UQ112x112.sol";
+import "./TWAMM.sol";
 
 contract Pair is ERC20 {
-    using SafeMath for uint256;
     using UQ112x112 for uint224;
 
     address public factory;
-    address public token0;
-    address public token1;
+    address public immutable token0;
+    address public immutable token1;
     string public token0Name;
     string public token1Name;
 
-    uint112 x;
-    uint112 y;
-    uint256 k;
-
     uint256 public price0Cumulative;
     uint256 public price1Cumulative;
+
+    uint112 x;
+    uint112 y;
     uint32 public lastBlockTimestamp;
+
+    /// @dev twamm state
+    TWAMM.OrderPools orderPools;
+
+    event Swap();
+    event MintLiquidity();
+    event BurnLiquidity();
+    event CreateLongTermOrder();
+    event CancelLongTermOrder();
+    event WithdrawLongTermOrder();
 
     constructor(
         address _token0,
@@ -36,6 +44,7 @@ contract Pair is ERC20 {
         token1 = _token1;
         token0Name = _token0Name;
         token1Name = _token1Name;
+        TWAMM.initialize(orderPools, _token0, _token1, _twammIntervalSize);
     }
 
     function getAmounts()
@@ -45,6 +54,14 @@ contract Pair is ERC20 {
     {
         amount0 = x;
         amount1 = y;
+    }
+
+    function getLongTermOrderInterval()
+        external
+        view
+        returns (uint256 blockInterval)
+    {
+        blockInterval = orderPools.orderExpireInterval;
     }
 
     // Utility function
@@ -74,52 +91,81 @@ contract Pair is ERC20 {
         lastBlockTimestamp = blockTimestamp;
     }
 
-    // --- Liquidity functions ---
-    function mint(address to) external returns (uint256 liquidity) {
-        // update reserves
-        uint256 balance0 = ERC20(token0).balanceOf(address(this));
-        uint256 balance1 = ERC20(token1).balanceOf(address(this));
-        uint256 amount0 = balance0.sub(x);
-        uint256 amount1 = balance1.sub(y);
+    /// @notice method for providing liquidity
+    function mint(
+        address _to,
+        uint256 _amountInX,
+        uint256 _amountInY
+    ) external returns (uint256 liquidity) {
+        (uint256 optAmountX, uint256 optAmountY) = _optimalLiquidity(
+            _amountInX,
+            _amountInY
+        );
 
+        // handle transfers
+        ERC20(token0).transferFrom(msg.sender, address(this), optAmountX);
+        ERC20(token1).transferFrom(msg.sender, address(this), optAmountY);
+
+        // calculate liquidity
         if (totalSupply == 0) {
-            liquidity = Math.sqrt(amount0.mul(amount1));
+            liquidity = Math.sqrt(optAmountX * optAmountY);
         } else {
             liquidity = Math.min(
-                amount0.mul(totalSupply) / x,
-                amount1.mul(totalSupply) / y
+                (optAmountX * totalSupply) / x,
+                (optAmountY * totalSupply) / y
             );
         }
-        _mint(to, liquidity); // ERC-20 function
-        _update(balance0, balance1, x, y);
+        _mint(_to, liquidity); // ERC-20 function
+        x = x + uint112(optAmountX);
+        y = y + uint112(optAmountY);
+
+        emit MintLiquidity();
     }
 
-    // burn()
-    function burn(address to)
-        external
-        returns (uint256 amount0, uint256 amount1)
+    function _optimalLiquidity(uint256 desiredAmount0, uint256 desiredAmount1)
+        internal
+        view
+        returns (uint256 amountX, uint256 amountY)
     {
-        uint256 balance0 = ERC20(token0).balanceOf(address(this));
-        uint256 balance1 = ERC20(token1).balanceOf(address(this));
-        uint256 liquidity = balanceOf[address(this)];
-
-        amount0 = liquidity.mul(balance0) / totalSupply;
-        amount1 = liquidity.mul(balance1) / totalSupply;
-
-        _burn(address(this), liquidity); // burn liquidity tokens
-
-        // Transfer tokens back to LP
-        ERC20(token0).transfer(to, amount0);
-        ERC20(token1).transfer(to, amount1);
-
-        // Update balances
-        balance0 = ERC20(token0).balanceOf(address(this));
-        balance1 = ERC20(token1).balanceOf(address(this));
-
-        _update(balance0, balance1, x, y);
+        // Empty pair with no liquidity
+        if (x == 0 && y == 0) {
+            (amountX, amountY) = (desiredAmount0, desiredAmount1);
+        } else {
+            uint256 optimalAmount1 = (desiredAmount0 * y) / x;
+            if (optimalAmount1 <= desiredAmount1) {
+                (amountX, amountY) = (desiredAmount0, optimalAmount1);
+            } else {
+                uint256 optimalAmount0 = (desiredAmount1 * x) / y;
+                (amountX, amountY) = (optimalAmount0, desiredAmount1);
+            }
+        }
     }
 
-    // swap()
+    /// @notice method for burning liquidity
+    // function burn(address to)
+    //     external
+    //     returns (uint256 amount0, uint256 amount1)
+    // {
+    //     uint256 liquidity = balanceOf[address(this)];
+
+    //     // calculate token amounts
+    //     amount0 = (liquidity * x) / totalSupply;
+    //     amount1 = (liquidity * y) / totalSupply;
+
+    //     // Update balances
+    //     x -= uint112(amount0);
+    //     y -= uint112(amount1);
+
+    //     // ERC-20 burn liquidity tokens
+    //     _burn(address(this), liquidity);
+
+    //     // Transfer tokens back to LP
+    //     ERC20(token0).transfer(to, amount0);
+    //     ERC20(token1).transfer(to, amount1);
+
+    //     emit BurnLiquidity();
+    // }
+
     function swap(
         uint256 amount0Out,
         uint256 amount1Out,
@@ -143,14 +189,138 @@ contract Pair is ERC20 {
             ? balance1 - (y - amount1Out)
             : 0;
 
-        uint256 balance0Adjusted = balance0.mul(1000).sub(amount0In.mul(3));
-        uint256 balance1Adjusted = balance1.mul(1000).sub(amount1In.mul(3));
+        uint256 balance0Adjusted = (balance0 * 1000) - (amount0In * 3);
+        uint256 balance1Adjusted = (balance1 * 1000) - (amount1In * 3);
         require(
-            balance0Adjusted.mul(balance1Adjusted) >=
-                uint256(x).mul(y).mul(1000**2),
+            balance0Adjusted * balance1Adjusted >= uint256(x) * y * (1000**2),
             "Whaleswap: K"
         );
 
         _update(balance0, balance1, x, y);
+
+        emit Swap();
+    }
+
+    /// @notice execute long term swap buying Y & selling X
+    /// @param _intervalNumber - the block number when LTO ends
+    /// @param _totalXIn - total amount of tokenX to transfer
+    function longTermSwapTokenXtoY(uint256 _intervalNumber, uint256 _totalXIn)
+        external
+    {
+        _longTermSwap(token0, token1, _intervalNumber, _totalXIn, 0);
+    }
+
+    /// @notice execute long term swap buying X & selling Y
+    /// @param _intervalNumber - the block number when LTO ends
+    /// @param _totalYIn - total amount of tokenY to transfer
+    function longTermSwapTokenYtoX(uint256 _intervalNumber, uint256 _totalYIn)
+        external
+    {
+        _longTermSwap(token1, token0, _intervalNumber, 0, _totalYIn);
+    }
+
+    function _longTermSwap(
+        address _token0,
+        address _token1,
+        uint256 _intervalNumber,
+        uint256 _totalXIn,
+        uint256 _totalYIn
+    ) private {
+        // interval calculations
+        uint256 nextIntervalBlock = block.number +
+            (orderPools.orderExpireInterval -
+                (block.number % orderPools.orderExpireInterval));
+        uint256 endIntervalBlock = nextIntervalBlock +
+            (_intervalNumber * orderPools.orderExpireInterval);
+
+        // execute erc20 transfers
+        // NOTE: msg.sender might not be correct here...
+        if (_totalXIn == 0)
+            ERC20(token1).transferFrom(msg.sender, address(this), _totalYIn);
+        else if (_totalYIn == 0)
+            ERC20(token0).transferFrom(msg.sender, address(this), _totalXIn);
+
+        // calculate block sales rate
+        // (works bc either _totalXIn or _totalYIn will always = 0)
+        uint256 blockSalesRate = (_totalXIn + _totalYIn) /
+            (endIntervalBlock - block.number);
+
+        // create LongTermSwap
+        TWAMM.createVirtualOrder(
+            orderPools,
+            _token0,
+            _token1,
+            endIntervalBlock,
+            blockSalesRate
+        );
+
+        emit CreateLongTermOrder();
+    }
+
+    /// @notice retrieve long term swap by id
+    function getLongTermSwapXtoY(uint256 _id)
+        external
+        view
+        returns (TWAMM.LongTermOrder memory order)
+    {
+        order = orderPools.pools[token0][token1].orders[_id];
+    }
+
+    /// @notice retrieve long term swap by id
+    function getLongTermSwapYtoX(uint256 _id)
+        external
+        view
+        returns (TWAMM.LongTermOrder memory order)
+    {
+        order = orderPools.pools[token1][token0].orders[_id];
+    }
+
+    /// @notice fetch orders by creator
+    // function getCreatedLongTermOrders()
+    //     external
+    //     view
+    //     returns (
+    //         TWAMM.LongTermOrder[] memory ordersXtoY,
+    //         TWAMM.LongTermOrder[] memory ordersYtoX
+    //     )
+    // {
+    //     ordersXtoY = _getCreatedOrderPool(orderPools.pools[token0][token1]);
+    //     ordersYtoX = _getCreatedOrderPool(orderPools.pools[token1][token0]);
+    // }
+
+    // function _getCreatedOrderPool(TWAMM.OrderPool storage pool)
+    //     private
+    //     view
+    //     returns (TWAMM.LongTermOrder[] memory orders)
+    // {
+    //     uint256 count = 0;
+    //     for (uint256 i = 0; i < pool.orderId; i++) {
+    //         if (pool.orders[i].creator == msg.sender) count++;
+    //     }
+
+    //     uint256 pos = 0;
+    //     orders = new TWAMM.LongTermOrder[](count);
+    //     for (uint256 j = 0; j < pool.orderId; j++) {
+    //         if (pool.orders[j].creator == msg.sender)
+    //             orders[pos++] = pool.orders[j];
+    //     }
+    // }
+
+    // function cancelLongTermOrder(
+    //     uint256 _id,
+    //     address _token0,
+    //     address _token1
+    // ) external {
+    //     TWAMM.cancelVirtualOrder(orderPools, _id, _token0, _token1);
+    //     emit CancelLongTermOrder();
+    // }
+
+    function withdrawLongTermOrder(
+        uint256 _id,
+        address _token0,
+        address _token1
+    ) external {
+        TWAMM.cancelVirtualOrder(orderPools, _id, _token0, _token1);
+        emit WithdrawLongTermOrder();
     }
 }

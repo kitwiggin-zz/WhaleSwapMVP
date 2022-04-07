@@ -30,8 +30,8 @@ This will depend on whatever blockchain software you decided to use in step 2. F
 We have been using metamask to connect our frontend to the local blockchain. First, add the network to MetaMask by clicking on the network dropdown in the MM UI (will probably have 'Ethereum Mainnet' as default). Click 'Add Network' and fill in the necessary fields. Using Ganache as an example:
 Network Name: Whatever you want to call the network
 New RPC URL: The RPC server your blockchain runs on. For Ganache, it's probably 'HTTP://127.0.0.1:7545' but you can copy paste it from the horizontal information bar in the Ganache UI under 'RPC Server:'.
-Chain ID: For Ganache, it's probably '5777' but again, you can copy paste whatever is under the 'Network ID:' component of the same horizontal information bar.
-Currency Symbol: Can leave blank
+Chain ID: For Ganache, it's 1337
+Currency Symbol: Doesn't matter, I put Eth
 Block Explorer URL: Can leave blank
 
 After you have connected to the relevant network, you can add a user account. To do this, click on the multicoloured, circular icon in the top right of the MetaMask UI. Click, 'Import Account' and enter the private key for whichever wallet you want to use. For Ganache, click on the key icon for the first account in the list and copy/paste the private key.

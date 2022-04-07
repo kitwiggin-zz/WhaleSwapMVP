@@ -9,9 +9,6 @@ class PairListElement extends React.Component {
   componentDidMount() {
     const { drizzle, drizzleState } = this.props;
 
-    console.log(drizzle);
-    console.log(drizzleState);
-
     if (this.props.pairAddress) {
       this.addPairContract();
     }
@@ -21,7 +18,6 @@ class PairListElement extends React.Component {
         `Pair${this.props.pairAddress.toLowerCase().slice(-4)}`
       ];
 
-    // let drizzle know we want to watch the `myString` method
     const xDataKey = contract.methods["token0Name"].cacheCall();
     const yDataKey = contract.methods["token1Name"].cacheCall();
 
@@ -64,7 +60,6 @@ class PairListElement extends React.Component {
       name2 = pairContract.token1Name[this.state.name2DK];
     }
 
-    // if it exists, then we display its value
     return (
       <div>
         <table id="table1">
@@ -82,18 +77,8 @@ class PairListElement extends React.Component {
           </tbody>
         </table>
       </div>
-      //pairInfo
     );
   }
 }
 
 export default PairListElement;
-
-/*          <tbody>
-            <tr>
-              <td>Address: {this.props.pairAddress}</td>
-              <td>token 0 Name: {name1 && name1.value}</td>
-              <td>token 1 Name: {name2 && name2.value}</td>
-            </tr>
-          </tbody>
-        </table>*/

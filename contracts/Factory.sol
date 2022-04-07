@@ -12,10 +12,6 @@ contract Factory {
         address pair
     );
 
-    function allPairsLength() external view returns (uint256) {
-        return allPairs.length;
-    }
-
     function getAllPairs() public view returns (address[] memory) {
         return allPairs;
     }
@@ -25,7 +21,7 @@ contract Factory {
         address _token1,
         string memory _token0Name,
         string memory _token1Name,
-        uint256 _interval
+        uint256 _twammIntervalSize
     ) external returns (address pair) {
         // requirements
         require(_token0 != _token1, "WHALESWAP: Tokens cannot be the same");
@@ -36,7 +32,13 @@ contract Factory {
 
         // instantiate new pool
         pair = address(
-            new Pair(_token0, _token1, _token0Name, _token1Name, _interval)
+            new Pair(
+                _token0,
+                _token1,
+                _token0Name,
+                _token1Name,
+                _twammIntervalSize
+            )
         );
 
         // record new pair address

@@ -24,7 +24,7 @@ class CreatePair extends React.Component {
       this.state.address2,
       this.state.name1,
       this.state.name2,
-      this.state.intervalSize,
+      parseInt(this.state.intervalSize),
       {
         from: drizzleState.accounts[0],
       }
