@@ -5,13 +5,20 @@ import FactoryInfo from "./components/FactoryInfo";
 import PairsInfo from "./components/PairsInfo";
 import image from "./a.png";
 import user from "./user.png";
-import PopUp from "./components/PopUp";
-import PopUp2 from "./components/PopUp2";
-import PopUp3 from "./components/PopUp3";
-import PopUp4 from "./components/PopUp4";
+import PopUp from "./components/popupComponents/PopUp";
+import PopUp2 from "./components/popupComponents/PopUp2";
+import PopUp3 from "./components/popupComponents/PopUp3";
+import PopUp4 from "./components/popupComponents/PopUp4";
 
 class App extends React.Component {
-  state = { loading: true, drizzleState: null, seen: false , seen2: false, seen3: false , seen4: false };
+  state = {
+    loading: true,
+    drizzleState: null,
+    seen: false,
+    seen2: false,
+    seen3: false,
+    seen4: false,
+  };
 
   componentDidMount() {
     const { drizzle } = this.props;
@@ -36,35 +43,28 @@ class App extends React.Component {
     this.setState({
       seen: !this.state.seen,
     });
-    console.log("clicked");
-    console.log(this.state.seen);
   };
 
   togglePop2 = () => {
     this.setState({
       seen2: !this.state.seen2,
     });
-    console.log("togglePop2");
   };
-
 
   togglePop3 = () => {
     this.setState({
       seen3: !this.state.seen3,
     });
-    console.log("togglePop3");
   };
 
   togglePop4 = () => {
     this.setState({
       seen4: !this.state.seen4,
     });
-    console.log("togglePop4");
   };
 
   render() {
     if (this.state.loading) return "Loading Drizzle...";
-
     return (
       <div className="App">
         <div>
@@ -107,17 +107,17 @@ class App extends React.Component {
           </div>
           {this.state.seen2 ? <PopUp2 toggle={this.togglePop2} /> : null}
         </div>
-        <div> 
-        <div className="factory App" onClick={this.togglePop3}>
-          <h3>Factory Info:</h3>
-          <h5>Address of Factory Contract:</h5>
-          <p>{this.props.drizzle.contracts.Factory.address}</p>
-          <FactoryInfo
-            drizzle={this.props.drizzle}
-            drizzleState={this.state.drizzleState}
-          />
-        </div>
-        {this.state.seen3 ? <PopUp3 toggle={this.togglePop3} /> : null}
+        <div>
+          <div className="factory App" onClick={this.togglePop3}>
+            <h3>Factory Info:</h3>
+            <h5>Address of Factory Contract:</h5>
+            <p>{this.props.drizzle.contracts.Factory.address}</p>
+            <FactoryInfo
+              drizzle={this.props.drizzle}
+              drizzleState={this.state.drizzleState}
+            />
+          </div>
+          {this.state.seen3 ? <PopUp3 toggle={this.togglePop3} /> : null}
         </div>
         <div className="pairs App" onClick={this.togglePop4}>
           <h3>Pairs Info:</h3>

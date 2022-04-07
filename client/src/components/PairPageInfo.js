@@ -2,8 +2,8 @@ import React from "react";
 import AddLiquidity from "./AddLiquidity";
 import MakeSwap from "./MakeSwap";
 import TWAMMInfo from "./TWAMMInfo";
-import PairPopUp1 from "./PairPopUp1";
-import PairPopUp2 from "./PairPopUp2";
+import PairPopUp1 from "./popupComponents/PairPopUp1";
+import PairPopUp2 from "./popupComponents/PairPopUp2";
 
 class PairPageInfo extends React.Component {
   state = {

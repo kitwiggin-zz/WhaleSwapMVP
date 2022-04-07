@@ -10,10 +10,7 @@ class TWAMMInfo extends React.Component {
   };
 
   componentDidMount() {
-    const { drizzle, drizzleState, contractName } = this.props;
-
-    console.log(drizzle);
-    console.log(drizzleState);
+    const { drizzle, contractName } = this.props;
 
     const contract = drizzle.contracts[contractName];
 
