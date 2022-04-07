@@ -9,8 +9,6 @@ class FactoryInfo extends React.Component {
 
     const contract = drizzle.contracts.Factory;
 
-    // let drizzle know we want to watch the `myString` method
-
     const allPairsDataKey = contract.methods["getAllPairs"].cacheCall();
 
     // save the `dataKey` to local component state for later reference
@@ -21,8 +19,6 @@ class FactoryInfo extends React.Component {
     // get the contract state from drizzleState
     const contract = this.props.drizzleState.contracts.Factory;
 
-    // using the saved `dataKey`, get the variable we're interested in
-    //const allPairsLength = contract.allPairsLength[this.state.dataKey];
     const allPairs = contract.getAllPairs[this.state.allPairsDK];
     let allPairsLength = 0;
     if (allPairs) {

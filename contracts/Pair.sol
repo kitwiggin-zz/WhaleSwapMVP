@@ -92,11 +92,15 @@ contract Pair is ERC20 {
     }
 
     /// @notice method for providing liquidity
+    /// @param _amountInX - number of X tokens user wants to provide
+    /// @param _amountInY - number of Y tokens user wants to provide
     function mint(
         address _to,
         uint256 _amountInX,
         uint256 _amountInY
     ) external returns (uint256 liquidity) {
+        // executeVirtualOrders / computeVirtualBalances -- get x and y up to date
+
         (uint256 optAmountX, uint256 optAmountY) = _optimalLiquidity(
             _amountInX,
             _amountInY
@@ -168,8 +172,11 @@ contract Pair is ERC20 {
     //     emit BurnLiquidity();
     // }
 
-    // Params: amountIn, addressOut, and tokenInIsX (bool: T if xIn, F if yIn)
     // This disregards fees for now
+    /// @notice execute long term swap
+    /// @param _amountIn - number of tokens user wants to swap
+    /// @param _tokenInIsX - true if swapping X to Y and false vice versa
+    /// @param _to - user/wallet address to which the newly received tokens are sent
     function swap(
         uint256 _amountIn,
         bool _tokenInIsX,
@@ -198,97 +205,47 @@ contract Pair is ERC20 {
         emit Swap();
     }
 
-    // function swap(
-    //     uint256 amount0Out,
-    //     uint256 amount1Out,
-    //     address to
-    // ) external {
-    //     uint256 balance0;
-    //     uint256 balance1;
-    //     if (amount0Out > 0) {
-    //         ERC20(token0).transfer(to, amount0Out);
-    //     }
-    //     if (amount1Out > 0) {
-    //         ERC20(token1).transfer(to, amount1Out);
-    //     }
-    //     balance0 = ERC20(token0).balanceOf(address(this));
-    //     balance1 = ERC20(token1).balanceOf(address(this));
+    /// @notice execute long term swap
+    /// @param _amountIn - number of tokens user wants to swap
+    /// @param _tokenInIsX - true if swapping X to Y and false vice versa
+    /// @param _numIntervals - number of intervals over which to split the LTO
+    function longTermSwap(
+        uint256 _amountIn,
+        bool _tokenInIsX,
+        uint256 _numIntervals
+    ) external {
+        // setting direction of swap
+        address inToken;
+        address outToken;
 
-    //     // Makes sure that nothing bad happens (neggy numbies) if a mismatch
-    //     // occurs between 0out here and balance change
-    //     uint256 amount0In = balance0 > x - amount0Out
-    //         ? balance0 - (x - amount0Out)
-    //         : 0;
-    //     uint256 amount1In = balance1 > y - amount1Out
-    //         ? balance1 - (y - amount1Out)
-    //         : 0;
+        if (_tokenInIsX) {
+            inToken = token0;
+            outToken = token1;
+        } else {
+            inToken = token1;
+            outToken = token0;
+        }
 
-    //     // This is a check to make sure calculations aren't way off / not balanced across the two pools.
-    //     // Multiply balances by 1000 to make sure that subtracting amountIn*3 doesn't give negative.
-    //     // Multiply by three - Want to make it bigger than actual change (newBalance-In)
-    //     // - However, factor must be greater than 2 because when multiplying the size of both pools, most
-    //     // extreme case will have a price impact of 50% (when Xin = x). So doubling both might = new k
-    //     uint256 balance0Adjusted = (balance0 * 1000) - (amount0In * 3);
-    //     uint256 balance1Adjusted = (balance1 * 1000) - (amount1In * 3);
-    //     require(
-    //         balance0Adjusted * balance1Adjusted >= uint256(x) * y * (1000**2),
-    //         "Whaleswap: K"
-    //     );
-
-    //     _update(balance0, balance1, x, y);
-
-    //     emit Swap();
-    // }
-
-    /// @notice execute long term swap buying Y & selling X
-    /// @param _intervalNumber - the block number when LTO ends
-    /// @param _totalXIn - total amount of tokenX to transfer
-    function longTermSwapTokenXtoY(uint256 _intervalNumber, uint256 _totalXIn)
-        external
-    {
-        _longTermSwap(token0, token1, _intervalNumber, _totalXIn, 0);
-    }
-
-    /// @notice execute long term swap buying X & selling Y
-    /// @param _intervalNumber - the block number when LTO ends
-    /// @param _totalYIn - total amount of tokenY to transfer
-    function longTermSwapTokenYtoX(uint256 _intervalNumber, uint256 _totalYIn)
-        external
-    {
-        _longTermSwap(token1, token0, _intervalNumber, 0, _totalYIn);
-    }
-
-    function _longTermSwap(
-        address _token0,
-        address _token1,
-        uint256 _intervalNumber,
-        uint256 _totalXIn,
-        uint256 _totalYIn
-    ) private {
         // interval calculations
         uint256 nextIntervalBlock = block.number +
             (orderPools.orderExpireInterval -
                 (block.number % orderPools.orderExpireInterval));
         uint256 endIntervalBlock = nextIntervalBlock +
-            (_intervalNumber * orderPools.orderExpireInterval);
+            (_numIntervals * orderPools.orderExpireInterval);
 
         // execute erc20 transfers
         // NOTE: msg.sender might not be correct here...
-        if (_totalXIn == 0)
-            ERC20(token1).transferFrom(msg.sender, address(this), _totalYIn);
-        else if (_totalYIn == 0)
-            ERC20(token0).transferFrom(msg.sender, address(this), _totalXIn);
+        ERC20(inToken).transferFrom(msg.sender, address(this), _amountIn);
 
-        // calculate block sales rate
-        // (works bc either _totalXIn or _totalYIn will always = 0)
-        uint256 blockSalesRate = (_totalXIn + _totalYIn) /
-            (endIntervalBlock - block.number);
+        // calculate per block sales rate
+        uint256 blockSalesRate = (_amountIn * 1000) /
+            (endIntervalBlock - uint256(block.number));
 
         // create LongTermSwap
         TWAMM.createVirtualOrder(
             orderPools,
-            _token0,
-            _token1,
+            inToken,
+            outToken,
             endIntervalBlock,
             blockSalesRate
         );
@@ -296,54 +253,58 @@ contract Pair is ERC20 {
         emit CreateLongTermOrder();
     }
 
-    /// @notice retrieve long term swap by id
-    function getLongTermSwapXtoY(uint256 _id)
-        external
-        view
-        returns (TWAMM.LongTermOrder memory order)
-    {
-        order = orderPools.pools[token0][token1].orders[_id];
-    }
+    // Removing for now - currently not returning order ids to users so not useful
+    // If we did, we should probably add a check to make sure the order they are retrieving
+    // belongs to them?
 
-    /// @notice retrieve long term swap by id
-    function getLongTermSwapYtoX(uint256 _id)
-        external
-        view
-        returns (TWAMM.LongTermOrder memory order)
-    {
-        order = orderPools.pools[token1][token0].orders[_id];
-    }
-
-    /// @notice fetch orders by creator
-    // function getCreatedLongTermOrders()
+    // /// @notice retrieve long term swap by id
+    // function getLongTermSwapXtoY(uint256 _id)
     //     external
     //     view
-    //     returns (
-    //         TWAMM.LongTermOrder[] memory ordersXtoY,
-    //         TWAMM.LongTermOrder[] memory ordersYtoX
-    //     )
+    //     returns (TWAMM.LongTermOrder memory order)
     // {
-    //     ordersXtoY = _getCreatedOrderPool(orderPools.pools[token0][token1]);
-    //     ordersYtoX = _getCreatedOrderPool(orderPools.pools[token1][token0]);
+    //     order = orderPools.pools[token0][token1].orders[_id];
     // }
 
-    // function _getCreatedOrderPool(TWAMM.OrderPool storage pool)
-    //     private
+    // /// @notice retrieve long term swap by id
+    // function getLongTermSwapYtoX(uint256 _id)
+    //     external
     //     view
-    //     returns (TWAMM.LongTermOrder[] memory orders)
+    //     returns (TWAMM.LongTermOrder memory order)
     // {
-    //     uint256 count = 0;
-    //     for (uint256 i = 0; i < pool.orderId; i++) {
-    //         if (pool.orders[i].creator == msg.sender) count++;
-    //     }
-
-    //     uint256 pos = 0;
-    //     orders = new TWAMM.LongTermOrder[](count);
-    //     for (uint256 j = 0; j < pool.orderId; j++) {
-    //         if (pool.orders[j].creator == msg.sender)
-    //             orders[pos++] = pool.orders[j];
-    //     }
+    //     order = orderPools.pools[token1][token0].orders[_id];
     // }
+
+    /// @notice fetch orders by creator
+    function getCreatedLongTermOrders()
+        external
+        view
+        returns (
+            TWAMM.LongTermOrder[] memory ordersXtoY,
+            TWAMM.LongTermOrder[] memory ordersYtoX
+        )
+    {
+        ordersXtoY = _getCreatedOrderPool(orderPools.pools[token0][token1]);
+        ordersYtoX = _getCreatedOrderPool(orderPools.pools[token1][token0]);
+    }
+
+    function _getCreatedOrderPool(TWAMM.OrderPool storage pool)
+        private
+        view
+        returns (TWAMM.LongTermOrder[] memory orders)
+    {
+        uint256 count = 0;
+        for (uint256 i = 0; i < pool.orderId; i++) {
+            if (pool.orders[i].creator == msg.sender) count++;
+        }
+
+        uint256 pos = 0;
+        orders = new TWAMM.LongTermOrder[](count);
+        for (uint256 j = 0; j < pool.orderId; j++) {
+            if (pool.orders[j].creator == msg.sender)
+                orders[pos++] = pool.orders[j];
+        }
+    }
 
     // function cancelLongTermOrder(
     //     uint256 _id,

@@ -28,7 +28,7 @@ class MakeSwap extends React.Component {
       from: drizzleState.accounts[0],
     });
 
-    let isX = testTokenInNumber === "1";
+    const isX = testTokenInNumber === "1";
 
     const swapDK = await pairContract.methods["swap"].cacheSend(
       amountIn,
@@ -96,8 +96,8 @@ class MakeSwap extends React.Component {
           </button>
         </div>
         <h5>
-          Estimated return from swapping {this.state.amountIn} coins of{" "}
-          {this.props.tokenInName}:{" "}
+          Estimated return from swapping {this.state.amountIn} coins of Token
+          {this.props.testTokenInNumber}:{" "}
         </h5>
         {this.state.amountIn && this.props.x && (
           <div>

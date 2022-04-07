@@ -1,5 +1,6 @@
 import React from "react";
 import MakeLTSwap from "./MakeLTSwap";
+import GetLTOrders from "./GetLTOrders";
 
 class TWAMMInfo extends React.Component {
   state = {
@@ -14,13 +15,11 @@ class TWAMMInfo extends React.Component {
 
     const contract = drizzle.contracts[contractName];
 
-    // let drizzle know we want to watch the `myString` method
     const interval = contract.methods["getLongTermOrderInterval()"].cacheCall();
     const token0Add = contract.methods["token0"].cacheCall();
     const token1Add = contract.methods["token1"].cacheCall();
     const getAmounts = contract.methods["getAmounts()"].cacheCall();
 
-    // save the `dataKey` to local component state for later reference
     this.setState({
       intervalDK: interval,
       tkn0AddDK: token0Add,
@@ -77,6 +76,14 @@ class TWAMMInfo extends React.Component {
                     k={amounts.value["amount0"] * amounts.value["amount1"]}
                   />
                 </div>
+              </div>
+              <div>
+                <h3>Long Term Orders:</h3>
+                <GetLTOrders
+                  drizzle={this.props.drizzle}
+                  drizzleState={this.props.drizzleState}
+                  contractName={this.props.contractName}
+                />
               </div>
             </div>
           </>

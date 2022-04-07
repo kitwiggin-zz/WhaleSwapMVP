@@ -19,9 +19,6 @@ class AddLiquidity extends React.Component {
 
     const { drizzle, drizzleState, contractName } = this.props;
 
-    console.log(drizzle);
-    console.log(drizzleState);
-
     const pairContract = drizzle.contracts[contractName];
 
     const amount1 = parseInt(this.state.amount1);

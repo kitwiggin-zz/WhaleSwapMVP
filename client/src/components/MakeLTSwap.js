@@ -17,9 +17,13 @@ class MakeLTSwap extends React.Component {
     const { drizzle, drizzleState, contractName, testTokenInNumber } =
       this.props;
 
+    console.log(drizzle);
+    console.log(drizzleState);
+
     const pairContract = drizzle.contracts[contractName];
 
     const amountIn = parseInt(this.state.amountIn);
+    const numIntervals = parseInt(this.state.numIntervals);
 
     const app1DK = await drizzle.contracts[
       "TestToken" + testTokenInNumber
@@ -27,12 +31,12 @@ class MakeLTSwap extends React.Component {
       from: drizzleState.accounts[0],
     });
 
-    let isX = testTokenInNumber === "1";
+    const isX = testTokenInNumber === "1";
 
-    const swapDK = await pairContract.methods["swap"].cacheSend(
+    const swapDK = await pairContract.methods["longTermSwap"].cacheSend(
       amountIn,
       isX,
-      this.state.recipient,
+      numIntervals,
       {
         from: drizzleState.accounts[0],
       }
@@ -90,7 +94,7 @@ class MakeLTSwap extends React.Component {
           />
           <input
             type="text"
-            placeholder={"Number of Intervals (50 blocks)"}
+            placeholder={"Number of Block Intervals"}
             onChange={this.handleChange}
             id="numIntervals"
           />
